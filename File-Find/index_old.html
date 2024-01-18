@@ -1,240 +1,97 @@
+<p><p align="left">
+  <img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/preview/icon_text.png" height="100"></p>
+
+<p><strong><p align="center" style="font-family:Futura; font-size:70px">File Find</p><strong></p>
+
+<h3 id="toc_0">File Find is a file search utility that helps you find files easier. It is open-source and free.</h3>
+
+<p><a href="https://github.com/Pixel-Master/File-Find/releases"></p>
+
 <p><p align="center">
-  <img src="https://gitlab.com/Pixel-Mqster/File-Find/-/raw/main/assets/icon.png" height="128">
-  <h1 align="center">File Find for macOS</h1></p>
+  <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/download.png?raw=true" height="130">
+<a ></p>
 
-<h3 align="center">A macOS UI Utility that helps you find Files easier.</h3>
+<h6 id="toc_1">File Find is currently only available for macOS but in the future there will be a Windows and Linux version</h6>
 
-<p><a href="https://github.com/Pixel-Master/File-Find/actions/workflows/File-Find.yml"><img src="https://github.com/Pixel-Master/File-Find/actions/workflows/File-Find.yml/badge.svg?branch=main" alt="File Find"></a></p>
+<p><p align="center"> 
+  <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/File%20Find%20screenshot%20dark.png?raw=true" height="500"></p>
 
-<h2 id="toc_0">Content</h2>
+<h1 id="toc_2">What&#39;s new?</h1>
+
+<h2 id="toc_3">Version 0.0</h2>
 
 <ul>
-<li><a href="#features">Features</a></li>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#download">Download</a></li>
-<li><a href="#running-from-source">Running from Source</a></li>
-<li><a href="#building-file-findapp">Building File Find.app</a></li>
-<li><a href="#roadmap">Roadmap</a></li>
+<li>Release </li>
 </ul>
 
-<h2 id="toc_1">Features</h2>
+<h1 id="toc_4">Features</h1>
+
+<h2 id="toc_5">Search</h2>
+
+<p><p align="center"> 
+  <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/File%20Find%20screenshot%20dark.png?raw=true" height="250"></p>
+
+<p>File Find has many filter options with them you can find and filter for almost everything. For a detailed overview, have a look at the <a href="#how-to">How to</a> section below.</p>
+
+<h2 id="toc_6">Find</h2>
+
+<p><p align="center"> 
+  <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/
+screenshots/results.png?raw=true" height="500"></p>
+
+<p>The search results window provides a simple list of all found files. From here you can compare or save a search.</p>
+
+<h2 id="toc_7">Compare</h2>
+
+<p><p align="center"> 
+  <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/compare.png?raw=true" height="500"></p>
+
+<p>With this feature you can easily compare two searches, one stored and the other opened. This has many application. E.g. seeing what an application installled or finding lost files</p>
+
+<h1 id="toc_8">How to</h1>
+
+<h2 id="toc_9">Basic</h2>
+
+<p><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/File%20Find%20screenshot%20white.png?raw=true" height="250"> </p>
 
 <ul>
-<li>Choose Filter which Files to include:
-
-<ul>
-<li>Name</li>
-<li>In Name</li>
-<li>File Ending</li>
-<li>Search in System Files</li>
-<li>Directory to search in</li>
-<li>File Size</li>
-<li>Search for Folders</li>
-<li>Fn-match (Unix shell-style wildcards)</li>
-<li>Search for File Content</li>
-<li>Date Created and Modified</li>
-</ul></li>
-<li>Exclude Folders</li>
-<li>Search for Files and export Searches</li>
-<li>Dark-mode</li>
-<li>Choose options for Files:
-
-<ul>
-<li>Show in Finder</li>
-<li>Open</li>
-<li>Copy Path/File</li>
-</ul></li>
-<li>Sort Results:
-
-<ul>
-<li>Size</li>
-<li>File Name</li>
-<li>Date Modified</li>
-<li>Date Created</li>
-</ul></li>
-<li><p>Reverse Results</p></li>
-<li><p>Generate Terminal command from Filters, supports:</p>
-
-<ul>
-<li>Name</li>
-<li>In Name</li>
-<li>File Ending</li>
-<li>Fn-match</li>
-</ul></li>
-<li><p>View File Hashes (md5, sha1, sha265)</p></li>
+<li><p><strong>Name</strong>: Input needs to match the name of a file exactly, ignoring case. Also supports unix shell-style wildcards, which are not the same as regular expressions. (also ignoring case)</p></li>
+<li><p><strong>Name contains</strong>: The name of a file must contain input, ignoring case</p></li>
+<li><p><strong>File Type</strong>: Select groups of files that should be included in search results&quot;</p></li>
+<li><p><strong>Directory</strong>: The Directory to search in.</p></li>
 </ul>
 
-<h2 id="toc_2">FAQ</h2>
+<h2 id="toc_10">Properties</h2>
 
-<p>Q: <strong>What is File Find and how does it work?</strong></p>
-
-<p>A: File Find is an open-source macOS Utility, that makes it easy to find Files. To search fill in the filters you need and leave the filters you don&#39;t need empty.</p>
-
-<p>Q: <strong>Why does File Find sometimes freeze?</strong></p>
-
-<p>A: It is possible that for example reloading Files or Building the UI at the end of a search can cause File Find to freeze. Just wait a minute!</p>
-
-<p>Q: <strong>How to clean the Cache?</strong></p>
-
-<p>A: File Find is saving the cache under <code>/Users/$USERNAME/Library/Application Support/File-Find/Cached Searches</code>. The Cache gets cleaned up on start up, that means to clean the cache just restart File Find</p>
-
-<p>Q: <strong>Why does File Find ask for permission for Contacts, Calenders, Photos, Downloads, etc...?</strong></p>
-
-<p>A: File Find scans the entire specified directory, even if files are excluded they are scanned first and then sorted out. 
-Your photos, calendar data, contacts etc. are stored in a library folder, which means that File Find scans them. 
-<strong>File Find does not connect to the internet</strong>, everything stays on your machine. If you are still uncomfortable, you can also press &quot;Do not allow&quot;, the associated files will not appear in your searches. <strong>If File Find asks for your Downloads or Desktop folder, you can decline, File Find will still be able to scan those files.</strong></p>
-
-<h2 id="toc_3">Download</h2>
-
-<p>File Find isn&#39;t ready for Release yet Run from source or download pre-build macOS Apps from the GitHub action Page.
-- <a href="#running-from-source">Running from Source</a>
-- <a href="#building-file-findapp">Building File Find.app</a>
-- <a href="https://github.com/Pixel-Master/File-Find/actions/workflows/File-Find.yml">GitHub Action Page</a></p>
-
-<h2 id="toc_4">Running from Source</h2>
-
-<h3 id="toc_5">Note:</h3>
-
-<h6 id="toc_6">File Find won&#39;t work properly on Linux or Windows, because the UI displays different depending on the OS and some Features depends on the system.</h6>
-
-<h3 id="toc_7">Dependencies for running</h3>
+<p><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/properties.png?raw=true" height="250"></p>
 
 <ul>
-<li><a href="https://python.org/">Python</a> 3.9 or higher</li>
-<li><a href="https://pypi.org/project/PyQt6/">PyQt 6</a> 6.4 or higher</li>
-<li><p><a href="https://pypi.org/project/pyperclip/">pyperclip</a> 1.8.2 or higher</p></li>
+<li><p><strong>File contains</strong>: Allows you to search in files. Input must be in the file content. This option can take really long. Input is case-sensitive.</p></li>
+<li><p><strong>Date created and modified</strong>: Specify a date range for the date the file has been created/ modified, leave at default to ignore.</p></li>
+<li><p><strong>File size</strong>: Input specifies file size in Mega Bytes (MB) in a range from min to max</p></li>
 </ul>
 
-<ol>
-<li><p>Install Python:</p>
+<h2 id="toc_11">Advanced</h2>
 
-<p>Download the installer: https://python.org/download or use</p>
-
-<p>Homebrew: <code>brew install python@3.11</code></p></li>
-<li><p>Install PyQt6 and pyperclip with pip:
-<code>pip3 install PyQt6 pyperclip</code></p></li>
-</ol>
-
-<h3 id="toc_8">Running</h3>
-
-<ol>
-<li>Clone the File Find Repository: <code>git clone https://gitlab.com/Pixel-Mqster/File-Find.git</code></li>
-<li>cd into the repository: <code>cd File-Find</code></li>
-<li><a href="#dependencies-for-running">Install dependencies</a></li>
-<li>Run:</li>
-</ol>
-
-<p><code>python3 File-Find.py</code> </p>
-
-<h2 id="toc_9">Building File Find.app</h2>
-
-<h3 id="toc_10">Note:</h3>
-
-<h6 id="toc_11">File Find won&#39;t work properly on Linux or Windows, because the UI displays different depending on the OS and some Features depends on the system.</h6>
-
-<h3 id="toc_12">Dependencies for building</h3>
+<p><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/advanced.png?raw=true" height="250"></p>
 
 <ul>
-<li><a href="https://python.org/">Python</a> 3.9 or higher</li>
-<li><a href="https://pypi.org/project/PyQt6/">PyQt 6</a> 6.4 or higher</li>
-<li><a href="https://pypi.org/project/pyperclip/">pyperclip</a> 1.8.2 or higher</li>
-<li><p><a href="https://pypi.org/project/py2app/">py2app</a> 5.6.2 or higher</p></li>
+<li><p><strong>File contains</strong>: Allows you to search in files. Input must be in the file content. This option can take really long. Input is case-sensitive.</p></li>
+<li><p><strong>Search in system files</strong>: Toggle to include files in the system and library folders.</p></li>
+<li><p><strong>File extension</strong>: Input needs to match the file extension (file type) without the &quot;.&quot;, ignoring case.</p></li>
+<li><p><strong>Only search for folders or files</strong>: Toggle to only include folders or files in the search results</p></li>
 </ul>
 
-<ol>
-<li><p>Install Python:</p>
+<h2 id="toc_12">Sorting</h2>
 
-<p>Download the installer: https://python.org/download or use</p>
+<p><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/sorting.png?raw=true" height="250"></p>
 
-<p>Homebrew: <code>brew install python@3.11</code></p></li>
-<li><p>Install PyQt6, pyperclip and py2app with pip:
-<code>pip3 install PyQt6 pyperclip py2app</code></p></li>
-</ol>
-
-<h3 id="toc_13">Building</h3>
-
-<ol>
-<li>Clone the File Find Repository: <code>git clone https://gitlab.com/Pixel-Mqster/File-Find.git</code></li>
-<li>cd into the repository: <code>cd File-Find</code></li>
-<li><a href="#dependencies-for-building">Install dependencies</a></li>
-<li>Run:</li>
-</ol>
-
-<p><code>python3 build-with-py2app.py py2app</code> </p>
-
-<h2 id="toc_14">Roadmap</h2>
-
-<ol>
-<li>[x] UI:
-
-<ol>
-<li>[x] Filter UI</li>
-<li>[x] Help UI</li>
-<li>[x] Search Result UI</li>
-</ol></li>
-<li>[x] Exporting and Importing Searches:
-
-<ol>
-<li>[x] Importing</li>
-<li>[x] Exporting </li>
-</ol></li>
-<li>[x] Caching:
-
-<ol>
-<li>[x] Creating Caches</li>
-<li>[x] Using Caches</li>
-<li>[x] Deleting Caches</li>
-<li>[x] Clear Cache option</li>
-</ol></li>
-<li>[ ] Multithreading:
-
-<ol>
-<li>[x] UI using different thread as Search engine</li>
-<li>[x] Hashing with different Threads</li>
-<li>[ ] Searching trough different threads</li>
-<li>[ ] Indexing trough different threads</li>
-</ol></li>
-<li>[x] Sorting:
-
-<ol>
-<li>[x] Size</li>
-<li>[x] File Name</li>
-<li>[x] Modified</li>
-<li>[x] Created</li>
-<li>[x] Reverse</li>
-</ol></li>
-<li>[ ] Searching:
-
-<ol>
-<li>[x] Name</li>
-<li>[x] In Name</li>
-<li>[x] File Ending</li>
-<li>[x] Search in System Files</li>
-<li>[x] Directory to search in</li>
-<li>[x] Search for Folders</li>
-<li>[ ] Search for Alias</li>
-<li>[ ] Exclude Sub-folders</li>
-<li>[x] Contains</li>
-<li>[ ] Search with root privileges</li>
-<li>[x] Regex (used fn match instead (Unix shell-style wildcards))</li>
-<li>[x] Date Modified</li>
-<li>[x] Date Created</li>
-<li>[x] Excluded Files</li>
-</ol></li>
-<li>[ ] Language
-
-<ol>
-<li>[x] Language UI</li>
-<li>[ ] Languages apply</li>
-<li>[ ] Languages:
-
-<ol>
-<li>[x] English</li>
-<li>[ ] German</li>
-<li>[ ] Frensh</li>
-<li>[ ] Spanish</li>
-<li>[ ] Chinese</li>
-</ol></li>
-</ol></li>
-<li>[ ] Compatible with Linux and Windows?</li>
-</ol>
+<ul>
+<li><p><strong>None</strong> (fastest)</p></li>
+<li><p><strong>File size</strong></p></li>
+<li><p><strong>File name</strong></p></li>
+<li><p><strong>Date modified</strong></p></li>
+<li><p><strong>Date created</strong></p></li>
+<li><p><strong>Path</strong></p></li>
+<li><p><strong>Reverse Sort</strong>: Reverse the sorted search results.</p></li>
+</ul>
