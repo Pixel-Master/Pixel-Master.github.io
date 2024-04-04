@@ -10,7 +10,7 @@
       <meta name="description" content="File Find | Search and find files fast and easily">
       <meta property="og:type" content="website">
       <meta name="twitter:card" content="summary">
-      <meta property="twitter:title" content="File Find for macOS">
+      <meta property="twitter:title" content="File Find">
       <meta name="author" content="Pixel Master">
       <meta property="og:site_name" content="File Find">
           
@@ -326,7 +326,7 @@
                             <th><div class="company-name">
                                 <a href="/"><img src="https://github.com/Pixel-Master/File-Find/blob/main/assets/icon.png?raw=true" height="60" width="auto" alt="File Find Logo" /></a>
                             </div></th>
-                            <th><p style="font-family:Futura; font-weight:400; color:black; font-size:25px"><strong>File Find</strong> for macOS</p></th>
+                            <th><p style="font-family:Futura; font-weight:400; color:black; font-size:25px"><strong>File Find</strong></p></th>
                         </tr>
                     </table>
                     <nav>
@@ -353,12 +353,12 @@
                 <br>
 
                 
-                <div align="center" class="cta button alt"><a href="https://github.com/Pixel-Master/File-Find/releases/latest/download/File-Find.dmg">macOS</a></div>
+                <div align="center" class="cta button alt"><a href="https://github.com/Pixel-Master/File-Find/releases/latest/download/File-Find.dmg">Download macOS</a></div>
                 
                 <br>
                 
                 
-                <p><strong><p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:20px">Currently only for macOS. There will be a Windows and Linux version</p></strong></p>
+                <p><strong><p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:20px">Currently in Beta, there are no stable builds, but you can download an image from the <a href="https://github.com/Pixel-Master/File-Find/actions">GitHub Action Page</a></p></strong></p>
 
                 <p><p align="center">
                     <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/File%20Find%20screenshot%20dark.png?raw=true" height="500"></p>
@@ -382,12 +382,12 @@
                     <tr><th><p align="center">
                     <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/File%20Find%20screenshot%20white.png?raw=true" height="250"></th>
 
-                    <th><p align="center" style="font-size:18px; font-weight:400;">This windows is basically your home. File Find has many filter options, with them you can find and filter for almost everything. For a detailed overview, have a look at the <a href="#how-to">How to</a> section below. Right-clicking the find button is going to show more options. The <code>i</code>    on the top right opens a setting and help window.</p></th></tr></table>
+                    <th><p align="center" style="font-size:18px; font-weight:400;">This window is basically your home. File Find has many filter options, with them you can find and filter for almost everything. For a detailed overview, have a look at the <a href="#how-to">How to</a> section below. Right-clicking the find button is going to show more options.<br><br>You can start multiple searches at once. See their status by clicking the File Find icon in the menu-bar and going to <code>Searches: ></code></p></th></tr></table>
 
                     <h2 id="toc_6" align="center">Find</h2>
 
                 <table>
-                    <tr><th><p align="center" style="font-size:18px; font-weight:400;">The search results window in File Find provides a simple list of all found files. Double clicking a path will reveal the file or folder in Finder. Next to the options at the bottom there are even more if you go to <code>Tools</code> in the menu bar. You can also find duplicated files. It is possible to <strong>save this search as a .FFSearch </strong>file. From this window you can also compare the opened search to an other saved search.</p></th>
+                    <tr><th><p align="center" style="font-size:18px; font-weight:400;">The search results window in File Find provides a simple list of all found files. Double clicking a path will reveal the file or folder in Finder or File Explorer. There are even more if you go to <code>Tools</code> in the menu bar. You can also find duplicated files. You can <strong>save this search as a .FFSearch </strong>file by going to <code>File > Save Search</code>. To compare the opened search to an other saved search, click the compare icon on the top right.</p></th>
                     
                     <th><p><p align="center">
                     <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/results.png?raw=true" height="500"></p></th></tr></table>
@@ -398,7 +398,7 @@
                         <tr><th><p><p align="center">
                             <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/compare.png?raw=true" height="500"></p></th>
                                 
-                                <th><p align="center" style="font-size:18px; font-weight:400;">With this feature you can easily <strong>compare two searches</strong>, one stored and the other opened. To get there open a search with eighter loading it from a .FFSearch file by setting filter options and pressing "Find". In the results window eighter press the compare icon or go to <code>Tools > Compare to other Search...</code>This has many application. E.g. seeing what an application installled or finding moved files.</p>
+                                <th><p align="center" style="font-size:18px; font-weight:400;">With this feature you can easily <strong>compare two searches</strong>, one stored and the other opened. To get there, open a search with eighter loading it from a .FFSearch file or by setting filter options and pressing "Find". Then in the results window eighter press the compare icon or go to <code>Tools > Compare to other Search...</code> This has many use-cases e.g. seeing which files an application installled or finding moved files.</p>
                                 
                         </th></tr>
                     
@@ -414,38 +414,38 @@
                 
                 <h1 id="how-to" align="center">How to</h1>
 
-                <h2 id="toc_9">Basic</h2>
+                <h2 id="toc_9">Basic-Tap</h2>
 
                 <p><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/File%20Find%20screenshot%20white.png?raw=true" height="250"> </p>
 
                 <ul>
                 <li><p><strong>Name</strong>: Input needs to match the name of a file exactly, ignoring case. Also supports unix shell-style wildcards, which are not the same as regular expressions (also ignoring case).</p></li>
                 <li><p><strong>Name contains</strong>: The name of a file must contain input, ignoring case.</p></li>
-                <li><p><strong>File Type</strong>: Select groups of files that should be included in search results.</p></li>
-                    <li><p><strong>Directory</strong>: The directory to search in.</p></li>
+                <li><p><strong>File Type</strong>: Select groups of files types that should be included in search results.</p></li>
+                    <li><p><strong>Directory</strong>: The directory tree to search in. Excluding subdirectory content is currently not possibly</p></li>
                 </ul>
 
-                <h2 id="toc_10">Properties</h2>
+                <h2 id="toc_10">Properties-Tap</h2>
 
                 <p><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/properties.png?raw=true" height="250"></p>
 
                 <ul>
-                <li><p><strong>File contains</strong>: Allows you to search in files. Input must be in the file content. This option can take really long. Input is case sensitive.</p></li>
+                <li><p><strong>File contains</strong>: Allows you to search in files. Input must be in the file content. This option can take really long. Your input is case-sensitive.</p></li>
                 <li><p><strong>Date created and modified</strong>: Specify a date range for the date the file has been created / modified, leave at default to ignore.</p></li>
                 <li><p><strong>File size</strong>: Input specifies file size in a range from min to max. Select the unit (Byte, Megabyte, Gigabyte...) on the right. Select "No Limit" to only set a minimum or maximum value.</p></li>
                 </ul>
 
-                <h2 id="toc_11">Advanced</h2>
+                <h2 id="toc_11">Advanced-Tap</h2>
 
                 <p><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/advanced.png?raw=true" height="250"></p>
 
                 <ul>
                 <li><p><strong>Search in system files</strong>: Toggle to include files in the system and library folders.</p></li>
-                <li><p><strong>File extension</strong>: Input needs to match the file extension (file type) without the (&quot;.&quot;), ignoring case.</p></li>
+                <li><p><strong>File extension</strong>: Input needs to match the file extension (file type) without the &quot;.&quot;, ignoring case.</p></li>
                 <li><p><strong>Only search for folders or files</strong>: Toggle to only include folders or files in the search results.</p></li>
                 </ul>
 
-                <h2 id="toc_12">Sorting</h2>
+                <h2 id="toc_12">Sorting-Tap</h2>
 
                 <p><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/screenshots/sorting.png?raw=true" height="250"></p>
 
@@ -471,21 +471,21 @@
 
                         <p>A: It is possible that for example reloading files or building the UI at the end of a search can cause File Find to freeze. Just wait a few seconds!</p>
 
-                    <li><p>Q: <strong>How do you clean the cache?</strong></p>
+                    <li><p>Q: <strong>How to clean the cache?</strong></p>
 
                         <p>A: File Find stores the cache under <code>/Users/$USERNAME/Library/Application Support/File-Find/Cached Searches</code>. You can clean the cache with <code>⌘ + T</code> or <code>Tools &gt; Clear Cache</code>. In the About section you can set when the cache gets cleaned automatically.</p>
 
                     <li><p>Q: <strong>Why does File Find ask for permission for Contacts, Calenders, Photos, etc...?</strong></p>
 
-                            <p>A: File Find scans the entire specified directory, even if files are excluded they are scanned first and then sorted out. Your photos, calendar data, contacts etc. are stored in a library folder, which means that File Find scans them. File Find does not connect to the internet, everything stays on your machine. You can also press &quot;Do not allow&quot;, the associated files will not appear in your searches.</p>
+                            <p>A: File Find scans the entire specified directory, even if files are excluded they are scanned first and then sorted out. Your photos, calendar data, contacts etc. are stored in a library folder, which means that File Find scans them. File Find does not connect to the internet at all, everything stays on your machine. You aould also press &quot;Do not allow&quot;, the associated files will not appear in your search results.</p>
 
                     <li><p>Q: <strong>Why does File Find ask for permission for Downloads, Desktop, Documents, etc...?</strong></p>
 
-                                <p>A: On macOS if an app scans a directory this popup will automatically appear. If you press &quot;Don&#39;t allow&quot;, File Find will still be able to scan those files, but you are not going to be able to save searches in those directories</p>
+                                <p>A: On macOS if an app scans a directory this popup will automatically appear. If you press &quot;Don&#39;t allow&quot;, File Find will still be able to scan those files, but you are not going to be able to save searches in those directories.</p>
 
                     <li><p>Q: <strong>Does File Find connect to the Internet?</strong></p>
                                 
-                                <p>A: <strong>File Find does not connect to the Internet</strong>, everything stays on your machine.</p>
+                                <p>A: <strong>No.</strong></p>
                 </ul>
             </section>
             <footer>
