@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>Download File Find</title>
+      <meta charset="utf-8">
+      <meta property="og:url" content="https://pixel-master.github.io/File-Find/download.html">
+      <meta property="og:title" content="File Find">
+      <meta property="og:image" content="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/preview/preview.png">
+      <meta property="og:locale" content="en_US">
+      <meta name="description" content="File Find | Search and find files fast and easily">
+      <meta property="og:type" content="website">
+      <meta name="twitter:card" content="summary">
+      <meta property="twitter:title" content="File Find">
+      <meta name="author" content="Pixel Master">
+      <meta property="og:site_name" content="File Find">
+          
+      <link rel="icon" type="image/png" href="https://github.com/Pixel-Master/File-Find/blob/main/assets/icon.png?raw=true">
+      <link rel="shortcut icon" href="https://github.com/Pixel-Master/File-Find/blob/main/assets/icon.png?raw=true">
+      
+      <style>
+            
+    
+      a:link {
+        color: black;
+        background-color: transparent;
+        text-decoration: none;
+      }
+
+      a:visited {
+        color: black;
+        background-color: transparent;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: black;
+        background-color: transparent;
+        text-decoration: underline;
+      }
+
+      a:active {
+        color: red;
+        background-color: transparent;
+        text-decoration: underline;
+      }
+      footer .footer-columns{
+          display:-webkit-box;
+          display:-webkit-flex;
+          display:-moz-flex;
+          display:-ms-flexbox;
+          display:flex
+      }
+      body{
+          font-family:"San Francisco", "Helvetica Neue", "Helvetica", "Arial"
+      }
+          
+    
+      navbar{
+          padding: 20px 0px 0px 0px
+          color: yellow
+          background:yellow
+      }
+        
+      topinfo{
+          padding: 0px 100px 0px 100px
+          background: yellow
+      }
+          
+      main{
+          padding: 0px 100px 0px 100px
+      }
+
+
+      
+      @media (min-width: 768px){
+          .flex{
+              display:-webkit-box;
+              display:-webkit-flex;
+              display:-moz-flex;
+              display:-ms-flexbox;
+              display:flex;
+              align-items:center;
+              flex-direction:row
+          }
+          .flex .text,.flex .image{
+              -webkit-flex:1;
+              flex:1;
+              padding:0 20px
+          }
+          .content section:nth-child(even) .flex{
+              flex-direction:row-reverse
+          }
+      }
+      .container,.text-container{
+          margin:0 auto;
+          position:relative;
+          padding:0 20px
+      }
+      .text-container{
+          max-width:750px
+      }
+      .container{
+          max-width:1140px
+      }
+      .container.max-container{
+          max-width:100%;
+          padding:0
+      }
+      .download-container{
+          display:flex;
+          flex-flow:row wrap;
+          justify-content:center;
+          align-items:center
+      }
+      .download-container>*{
+          padding:5px
+      }
+      header a{
+          color:#fff;
+          text-decoration:none;
+          z-index:1;
+          position:relative
+      }
+      header a:hover{
+          text-decoration:none
+      }
+      header .company-name{
+          font-size:1.7em;
+          line-height:0
+      }
+      header .company-name a{
+          display:inline-block
+      }
+      header .company-name img{
+          display:block;
+          width:auto
+      }
+      .content{
+          background:#fff;
+          padding:1px 0 0 0;
+          position:relative
+      }
+      
+      .button a,input[type=submit]{
+          color:#000;
+          text-decoration:none;
+          padding:10px 30px;
+          background:#000;
+          border-radius:3px;
+          border:2px solid rgba(255,255,255,0.5);
+          transition:.2s ease-in-out
+      }
+      .button a:hover,input[type=submit]:hover{
+          border:1px solid #fff;
+          cursor:pointer
+      }
+      .button.alt a{
+          background: #00f298;
+          border-radius:3px;
+          border:2px solid black;
+          padding:16px 50px
+      }
+      .button.alt a:hover{
+          background:#000;
+          border:2px solid #00f298;
+          color:#00f298
+      }
+      textarea,input,button,select{
+          font-family:inherit;
+          color: black;
+          font-size:inherit
+    
+      }
+      .nav-open nav{
+          border-bottom:1px dotted rgba(255,255,255,0.2);
+          padding:10px 0
+      }
+      .nav-open nav a{
+          display:block
+      }
+      @media (min-width: 620px){
+          .nav-open nav{
+              border:0;
+              padding:0 20px
+          }
+          .nav-open nav a{
+              display:inline
+          }
+      }
+      nav{
+          text-transform:uppercase;
+          font-size:.8em;
+          width:100%
+      }
+      @media (min-width: 620px){
+          nav{
+              text-align:right;
+              position:absolute;
+              top:13px;
+              right:0;
+              padding:0 20px
+          }
+      }
+      nav a{
+          margin:0 3px;
+          padding:20px 10px;
+          border-bottom:1px solid 000;
+          color:#01ace5;
+          transition:.2s ease-in-out;
+          display:none
+      }
+      @media (min-width: 620px){
+          nav a{
+              display:inline;
+              padding:10px
+          }
+      }
+      nav a.nav-toggle{
+          display:inline;
+          position:absolute;
+          right:10px;
+          top:-22px;
+          font-size:1.9em;
+          border:0
+      }
+      @media (min-width: 620px){
+          nav a.nav-toggle{
+              display:none
+          }
+      }
+      nav a.nav-toggle:hover{
+          border:0
+      }
+      nav a:hover{
+          border-bottom:1px solid #01ace5;
+          color:black
+      }
+      @media (min-width: 620px){
+          nav a.highlight{
+              border:1px black solid;
+              color:#01ace5;
+              background: black;
+              border-radius:5px
+          }
+          nav a.highlight:hover{
+              background:black;
+              border:1px #01ace5 solid;
+              color:#01ace5
+              
+          }
+      }
+      nav a.active{
+          color:#01ace5
+      }
+      .footer-links{
+          width:100%;
+          margin:10px;
+          padding:0
+      }
+      @media (min-width: 450px){
+          .footer-links{
+              -webkit-flex:1 0 180px;
+              flex:1 0 180px
+          }
+      }
+      .footer-links li{
+          list-style:none;
+          margin:15px auto
+      }
+      @media (min-width: 450px){
+          .footer-links li{
+              max-width:150px
+          }
+      }
+      .footer-links li a:hover{
+          text-decoration:none
+      }
+      .footer-links li a svg{
+          fill:#999;
+          margin-right:10px;
+          transition:fill 0.2s ease;
+          vertical-align:middle;
+          position:relative;
+          top:-2px;
+          width:22px;
+          height:22px
+      }
+      .footer-links li a:hover svg{
+          fill:#fff
+      }
+      .footer-links li a.youtube-icon:hover svg{
+          fill:#cd201f
+      }
+      .footer-links li a.rss-icon:hover svg{
+          fill:#f26522
+      }
+      footer{
+          padding:50px 0 50px 0;
+          font-size:1.1em;
+          position:relative;
+          background: #fff;
+          color:black
+      }
+      footer .copyright{
+          font-size:.8em;
+          margin:0 auto
+      }
+      @media (min-width: 450px){
+          footer .copyright{
+              text-align:center
+          }
+      }
+      button-with-margin {
+        margin: 25px 10px 15px 20px;
+      }
+          
+      </style>
+    </head>
+    <body >
+        <font color="000000" style="font-family:Arial;">
+            <section class="navbar">
+                <header>
+                <div class="container">
+                    <table>
+                        <tr>
+                            <th><div class="company-name">
+                                <a href="https://pixel-master.github.io/File-Find"><img src="https://github.com/Pixel-Master/File-Find/blob/main/assets/icon.png?raw=true" height="60" width="auto" alt="File Find Logo" /></a>
+                            </div></th>
+                            <th><p style="font-family:Futura; font-weight:400; color:black; font-size:25px"><strong>File Find</strong></p></th>
+                        </tr>
+                    </table>
+                    <nav>
+
+                        <a href="https://github.com/Pixel-Master/File-Find" class="">Source</a>
+
+                        <a href="https://pixel-master.github.io/File-Find#faq" class="">FAQ</a>
+
+                        <a href="#newest">Newest Version</a>
+                        
+                        <a href="#pixel-master">Pixel Master</a>
+
+
+                    </nav>
+
+                </div>
+                </header>
+            </section>
+            <section class="topinfo" style="padding: 0px 100px 0px 100px;">
+                
+                <p style="font-size:30px" align="center"><strong>Download</strong></p>
+                
+                <br>
+                
+                <h1 style="font-size:20px" align="center">Newest Version (1.0)</h1>
+
+                
+                <br>
+
+                <table align="center" id="download">
+                    <tr>
+                        <th>
+                            <div align="center" class="cta button alt"><a href="https://github.com/Pixel-Master/File-Find/releases/latest/download/File.Find.dmg">macOS</a></div>
+                        </th>
+                        <th>
+                            <div align="center" class="cta button alt"><a href="https://github.com/Pixel-Master/File-Find/releases/latest/download/File.Find.exe">Windows</a></div>
+                        </th>
+                        <th>
+                            <div align="center" class="cta button alt"><a href="https://github.com/Pixel-Master/File-Find/archive/refs/tags/v0.0-rc3.tar.gz">Linux</a></div>
+                        </th>
+                </tr>
+                <tr>
+                    <th>
+                        <br>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.dmg) · 56.1 MB</p>
+                    </th>
+                    
+                    <th>
+                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.exe) · 20.8 MB</p>
+                    </th>
+                    <th>
+                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.tar.gz) · 416 KB</p>
+                    </th>
+                </tr>
+                </table>
+                
+                <br>
+                
+                <p><p align="center">
+                    <img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/File-Find/preview/preview_round2.png?raw=true" height="300"></p>
+                
+                <p id="newest" style="font-size:30px" align="center"><strong>Versions</strong></p>
+                
+                <h1 id="0.0-rc3">Pre-Release 0.0-rc3</h1>
+                <p color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">23. July 2024</p>
+                
+                <h3>Downloads</h3>
+                
+                <ul>
+                <li><a href"https://github.com/Pixel-Master/File-Find/releases/download/v0.0-rc3/File.Find.app.zip">macOS: File.Find.app.zip (60.2 MB, macOS 11 or higher, Universal)</a></li>
+                <li> <a href"https://github.com/Pixel-Master/File-Find/releases/download/v0.0-rc3/File.Find.dmg">macOS: File.Find.dmg (56.1 MB, macOS 11 or higher, Universal)</a></li>
+                <li> <a href"https://github.com/Pixel-Master/File-Find/releases/download/v0.0-rc3/File.Find.exe">Windows: File.Find.exe (20.8 MB, Windows 10 or higher)</a></li>
+                <li> <a href"https://github.com/Pixel-Master/File-Find/releases/download/v0.0-rc3/File.Find.bin">Linux: File.Find.bin (39.92 MB, x86-64)</a></li>
+                <li> <a href"https://github.com/Pixel-Master/File-Find/archive/refs/tags/v0.0-rc3.tar.gz">Source code: File-Find-0.0-rc3.tar.gz (416 KB)</a></li>
+                </ul>
+                
+                
+                
+                <h3>Changelog</h3>
+                
+                <ul>
+                <li>Added settings option to disable the menu bar icon</li>
+                <li>Improved settings check</li>
+                <li>When app icon in dock is pressed main window will be displayed</li>
+                <li>Added menu bar with large info boxes</li>
+                <li>Decreased font size on linux</li>
+                <li>Fixed Shortcut Ctrl+Delete to Ctrl+Backspace</li>
+                </ul>
+                
+            
+            
+            </section>
+            <section class="main" style="padding: 0px 100px 0px 100px;">
+            <footer>
+                
+                <h1 align="center" id="pixel-master">by Pixel Master</h1>
+                <p align="center"><img src="https://github.com/Pixel-Master/Pixel-Master.github.io/blob/main/profile.png?raw=true" width="110" /></p>
+                
+                <p align="center"><a href="https://pixel-master.github.io">Website</a></p>
+                
+                <p align="center"><a href="https://github.com/Pixel-Master/File-Find">Source Code</a></p>
+                
+                
+                <p align="center"><a href="https://github.com/Pixel-Master">Github</a></p>
+
+            
+        </footer>
+        </font>
+    </body>
+</html>
+
+
+
+
+
