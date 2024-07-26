@@ -45,11 +45,21 @@
    
    <url>
 
-      <loc>https://pixel-master.github.io/File-Find/Pixel-Timer</loc>
+      <loc>https://pixel-master.github.io/Pixel-Timer</loc>
 
       <changefreq>yearly</changefreq>
 
       <priority>0.5</priority>
+
+   </url>
+   
+   <url>
+
+      <loc>https://pixel-master.github.io/Pixel-Timer/install</loc>
+
+      <changefreq>yearly</changefreq>
+
+      <priority>0.2</priority>
 
    </url>
    
