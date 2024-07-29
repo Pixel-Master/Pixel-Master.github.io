@@ -15,7 +15,7 @@
    
    <url>
 
-      <loc>https://pixel-master.github.io/File-Find</loc>
+      <loc>https://pixel-master.github.io/File-Find/index.html</loc>
 
       <changefreq>monthly</changefreq>
 
@@ -27,7 +27,7 @@
 
       <loc>https://pixel-master.github.io/File-Find/download</loc>
 
-      <changefreq>monthly</changefreq>
+      <changefreq>weekly</changefreq>
 
       <priority>0.8</priority>
 
@@ -45,7 +45,7 @@
    
    <url>
 
-      <loc>https://pixel-master.github.io/Pixel-Timer</loc>
+      <loc>https://pixel-master.github.io/Pixel-Timer/index.html</loc>
 
       <changefreq>yearly</changefreq>
 
@@ -65,7 +65,7 @@
    
    <url>
 
-      <loc>https://pixel-master.github.io/File-Find/Spam-Bot</loc>
+      <loc>https://pixel-master.github.io/Spam-Bot/index.html</loc>
 
       <changefreq>yearly</changefreq>
 
@@ -77,7 +77,7 @@
 
       <loc>https://pixel-master.github.io/File-Find/legacy</loc>
 
-      <changefreq>never</changefreq>
+      <changefreq>yearly</changefreq>
 
       <priority>0.3</priority>
 
