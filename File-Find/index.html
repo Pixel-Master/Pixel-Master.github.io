@@ -494,14 +494,27 @@
                     <li><p>Q: <strong>What is File Find and how does it work?</strong></p>
 
                         <p>A: File Find is an open-source Utility for macOS, Windows and Linux, that makes it easy to find files. To search fill in the filters you need and leave the filters you don&#39;t need empty.</p>
+                        
+                    <li><p>Q: <strong>Why doesn't File Find find my file/folder?</strong></p>
 
+                        <p>A: By default (on a fresh install) File Find finds every file/folder except internal system files in the <code>Library</code> or <code>System</code> folders.
+                        You can enable them under "Advanced".
+
+                        File Find uses its own caching algorithm. Scanning results are stored and reused for a faster search.
+                        On default this cache gets cleared every two hours. You can clear the cache manually with <code>⌘ + T</code> on macOS (on Windows/Linux: </code>Ctrl + T</code>). Or right-click on the </code>Find</code> button and select </code>Search and create new cache for selected folder</code>.
+
+                        Also check the excluded files list in the settings. Files listed there will not show up. Other than that press <code>⌘ + R</code> on macOS (on Windows/Linux: <code>Ctrl + R</code>) to reset all filter settings to default.
+                        If none of these options help, <a href="https://github.com/Pixel-Master/File-Find#bug-reports">create a Bug Report.</a></p>
+                        
+                        
                     <li><p>Q: <strong>Why does File Find sometimes freeze?</strong></p>
 
                         <p>A: It is possible that for example reloading files or building the UI at the end of a search can cause File Find to freeze. Just wait a few seconds!</p>
 
-                    <li><p>Q: <strong>How to clean the cache?</strong></p>
+                    <li><p>Q: <strong>How do I clean the cache?</strong></p>
 
-                        <p>A: File Find stores the cache under <code>/Users/$USERNAME/Library/Application Support/File-Find/Cached Searches</code>. You can clean the cache with <code>⌘ + T</code> or <code>Tools &gt; Clear Cache</code>. In the About section you can set when the cache gets cleaned automatically.</p>
+                        <p>A: File Find uses its own caching algorithm. Scanning results are stored and reused for a faster search.
+                        On default this cache gets cleared every two hours. You can change this behavior in the preferences. You can clear the cache manually with <code>⌘ + T</code> on macOS (on Windows/Linux: <code>Ctrl + T</code>). Or right click on the <code>Find</code> button and select <code>Search and create new cache for selected folder</code>.
 
                     <li><p>Q: <strong>Why does File Find ask for permission for Contacts, Calenders, Photos, etc...?</strong></p>
 
