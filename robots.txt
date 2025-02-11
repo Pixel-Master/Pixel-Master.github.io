@@ -1,0 +1,6 @@
+User-Agent: *
+Allow: /
+Disallow: /File-Find/legacy
+
+
+Sitemap: https://www.pixel-master.github.io/sitemap.xml
