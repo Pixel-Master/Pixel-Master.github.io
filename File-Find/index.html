@@ -491,40 +491,61 @@
                 
 
                 <ul>
-                    <li><p>Q: <strong>What is File Find and how does it work?</strong></p>
+                    <li><p>Q: <strong>What is File Find and how does it work?</strong></p></li>
 
                         <p>A: File Find is an open-source Utility for macOS, Windows and Linux, that makes it easy to find files. To search fill in the filters you need and leave the filters you don&#39;t need empty.</p>
                         
                     <li><p>Q: <strong>Why doesn't File Find find my file/folder?</strong></p>
 
-                        <p>A: By default (on a fresh install) File Find finds every file/folder except internal system files in the <code>Library</code> or <code>System</code> folders.
-                        You can enable them under "Advanced".
-
-                        File Find uses its own caching algorithm. Scanning results are stored and reused for a faster search.
-                        On default this cache gets cleared every two hours. You can clear the cache manually with <code>⌘ + T</code> on macOS (on Windows/Linux: </code>Ctrl + T</code>). Or right-click on the </code>Find</code> button and select </code>Search and create new cache for selected folder</code>.
-
-                        Also check the excluded files list in the settings. Files listed there will not show up. Other than that press <code>⌘ + R</code> on macOS (on Windows/Linux: <code>Ctrl + R</code>) to reset all filter settings to default.
-                        If none of these options help, <a href="https://github.com/Pixel-Master/File-Find#bug-reports">create a Bug Report.</a></p>
+                        <p>A: Try the following steps:
+                        
+                        <ul><li><p>By default (on a fresh install) File Find finds every file/folder except internal system files in the <code>Library</code> or <code>System</code> folders.
+                        You can enable them under <code>Advanced</code>.</p></li>
                         
                         
+                        <li><p>Maybe you haven't granted all the permission necessary to find every file. There are also some files that are only accessible to File Find by granting Full Disk Acess.
+                        To do this open System Preferences, go to <code>Security & Privacy</code> and then add or activate File Find under <code>Full Disk Access</code>.</p></li>
+
+                        
+                        <li><p>File Find uses its own caching algorithm. Scanning results are stored and reused for a faster search.
+                        On default this cache gets cleared every two hours. You can clear the cache manually with <code>⌘ + T</code> on macOS (on Windows/Linux: <code>Ctrl + T</code>). Or right-click on the <code>Find</code> button and select <code>Search and create new cache for selected folder</code>.</p></li>
+
+                        
+                        <li><p>Check the excluded files list in the settings. Files listed there will not show up.</p></li>
+                            
+                            <li><p>Press <code>⌘ + R</code> on macOS (on Windows/Linux: <code>Ctrl + R</code>) to reset all filter settings to default and make sure the file actually meets the given criteria.</p></li>
+
+                        
+                        <li>If none of these options help, <a href="https://github.com/Pixel-Master/File-Find#bug-reports">create a Bug Report.</a></ul></p>
+                        
+                        
+                    <li><p>Q: <strong>Why can't I open File Find?</strong></p>
+
+                        <p>A:  On macOS, if you get a message like <br><br>
+                        
+                        <strong>“File Find.app” Not Opened</strong>
+                        <br>Apple could not verify “File Find.app” is free of malware that may harm your Mac or compromise your privacy.<br>
+                        
+                        <br>it is because File Find isn't signed with an Developer Certificate, which has to be acquired by Apple at around 99$. I currently do not have one nor plan on buying one soon. MacOS flags everyone who doesn't have one as "potentially unwanted software". To bypass this you have to press <code>Done</code>, open System Preferences, go to <code>Privacy & Security</code>, scroll down to <code>"File Find.app" was blocked to protect your Mac.</code> and press <code>Open Anyway</code>. There is going to be another Popup, in which you'll have to press <code>Open Anyway</code> again.</p></li>
+                    
                     <li><p>Q: <strong>Why does File Find sometimes freeze?</strong></p>
 
-                        <p>A: It is possible that for example reloading files or building the UI at the end of a search can cause File Find to freeze. Just wait a few seconds!</p>
+                        <p>A: It is possible that for example reloading files or building the UI at the end of a search can cause File Find to freeze. Just wait a few seconds!</p></li>
 
-                    <li><p>Q: <strong>How do I clean the cache?</strong></p>
+                    <li><p>Q: <strong>How do I clean the cache?</strong></p><l/i>
 
                         <p>A: File Find uses its own caching algorithm. Scanning results are stored and reused for a faster search.
                         On default this cache gets cleared every two hours. You can change this behavior in the preferences. You can clear the cache manually with <code>⌘ + T</code> on macOS (on Windows/Linux: <code>Ctrl + T</code>). Or right click on the <code>Find</code> button and select <code>Search and create new cache for selected folder</code>.
 
-                    <li><p>Q: <strong>Why does File Find ask for permission for Contacts, Calenders, Photos, etc...?</strong></p>
+                    <li><p>Q: <strong>Why does File Find ask for permission for Contacts, Calenders, Photos, etc...?</strong></p></li>
 
                             <p>A: File Find scans the entire specified directory, even if files are excluded they are scanned first and then sorted out. Your photos, calendar data, contacts etc. are stored in a library folder, which means that File Find scans them. File Find does not connect to the internet at all, everything stays on your machine. You could also press &quot;Do not allow&quot;, the associated files will not appear in your search results.</p>
 
-                    <li><p>Q: <strong>Why does File Find ask for permission for Downloads, Desktop, Documents, etc...?</strong></p>
+                    <li><p>Q: <strong>Why does File Find ask for permission for Downloads, Desktop, Documents, etc...?</strong></p></li>
 
                                 <p>A: On macOS if an app scans a directory this popup will automatically appear. If you press &quot;Don&#39;t allow&quot;, File Find will still be able to scan those files, but you are not going to be able to save searches in those directories.</p>
 
-                    <li><p>Q: <strong>Does File Find connect to the Internet?</strong></p>
+                    <li><p>Q: <strong>Does File Find connect to the Internet?</strong></p></li>
                                 
                                 <p>A: <strong>No.</strong></p>
                 </ul>
