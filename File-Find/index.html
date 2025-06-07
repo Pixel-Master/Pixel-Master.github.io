@@ -405,37 +405,36 @@
                 <h1 align="center" id="toc_4">Features</h1>
                 <table>
 
-                    <h2 align="center" id="toc_5">Search</h2>
 
                     <tr><th><p align="center">
                     <img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/screenshots/File%20Find%20screenshot%20white.png" height="250"></th>
 
-                    <th><p align="center" style="font-size:18px; font-weight:400;">This window is basically your home. File Find has many filter options, with them you can find and filter for almost everything. For a detailed overview, have a look at the <a href="#how-to">How to</a> section below. Right-clicking the find button is going to show more options.<br><br>You can start multiple searches at once. See their status by clicking the File Find icon in the menu-bar and going to <code>Searches: ></code><br><br>You can <strong>export your set filters as a .FFFilter</strong> file, load them again, share them or even set them as a default in the settings. </p></th></tr></table>
-
-                    <h2 id="toc_6" align="center">Find</h2>
+                    <th><h2 align="center" id="toc_5">Search</h2><p align="left" style="font-size:18px; font-weight:400;">Easily find the right filter setting. File Find has many filter options, with them you can find and filter for almost everything. For a detailed overview, have a look at the <a href="#how-to">How to</a> section below. Right-clicking the find button is going to show more options.<br><br>You can start multiple searches at once and see their status by clicking the File Find icon in the menu-bar and going to <code>Searches: ></code><br><br>You can <strong>export your set filters as a .FFFilter</strong> file, load them again, share them or even set them as a default in the settings. </p></th></tr></table>
 
                 <table>
-                    <tr><th><p align="center" style="font-size:18px; font-weight:400;">The search results window in File Find provides a simple list of all found files. Double clicking a path will reveal the file or folder in Finder or File Explorer. There are even more if you go to <code>Tools</code> in the menu bar. You can also find duplicated files. You can <strong>save this search as a .FFSearch </strong>file by going to <code>File > Save Search</code>. To compare the opened search to an other saved search, click the compare icon on the top right.</p></th>
+                    <tr><th><h2 id="toc_6" align="center">Efficiently locate your files.</h2><p align="left" style="font-size:18px; font-weight:400;">The search results window in File Find provides a simple overview over all found files. Double clicking a path will reveal the file or folder in Finder or File Explorer. There are even more if you go to <code>Tools</code> in the menu bar. You can also find duplicated files. You can <strong>save this search as a .FFSearch </strong>file by going to <code>File > Save Search</code>. To compare the opened search to an other saved search, click the compare icon on the top right.</p></th>
                     
                     <th><p><p align="center">
                     <img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/screenshots/results.png" height="500"></p></th></tr></table>
                 
                 <table>
-                    <h2 id="toc_7" align="center">Compare</h2>
+
 
                         <tr><th><p><p align="center">
                             <img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/screenshots/compare.png" height="500"></p></th>
                                 
-                                <th><p align="center" style="font-size:18px; font-weight:400;">With this feature you can easily <strong>compare two searches</strong>, one stored and the other opened. To get there, open a search with either loading it from a .FFSearch file or by setting filter options and pressing "Find". Then in the results window either press the compare icon or go to <code>Tools > Compare to other Search...</code> This has many use-cases e.g. seeing which files an application installled or finding moved files.</p>
+                                <th><h2 id="toc_7" align="center">Compare your searches.</h2>
+                                    <p align="left" style="font-size:18px; font-weight:400;">You can easily <strong>compare two searches</strong>, one stored and the other opened. To do this, open a search by either loading it from a .FFSearch file or by setting filter options and pressing <code>Find</code>. Then in the results window either press the compare icon or go to <code>Tools > Compare to other Search...</code> This has many use-cases e.g. seeing which files an application installled or finding moved files.</p>
                                 
                         </th></tr>
                     
                 </table>
                 
-                <h2 id="toc_6" align="center">Duplicated</h2>
+
 
             <table>
-                <tr><th><p align="center" style="font-size:18px; font-weight:400;">This feature allows you to easily find duplicated files in every search. Possible criterias are: File name, File size and File content. The duplicated files are sorted in groups. In the results window either press the duplicated icon on the top right or go to <code>Tools > Find duplicated files...</code>. </p></th>
+                <tr><th><h2 id="toc_6" align="center">Find duplicated files.</h2>
+                <p align="left" style="font-size:18px; font-weight:400;">You can easily find duplicated files in every search. Possible (duplication) criterias are: File name, File size or File content. You can even set a matching-percentage so that for example the file name could be up to 90% similar. The duplicated files are sorted in groups. In the results window either press the duplicated icon on the top right or go to <code>Tools > Find duplicated files...</code>. </p></th>
                 
                 <th><p><p align="center">
                 <img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/screenshots/duplicated.png" height="500"></p></th></tr></table>
@@ -447,10 +446,50 @@
                 <p><img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/screenshots/File%20Find%20screenshot%20white.png" height="250"> </p>
 
                 <ul>
-                <li><p><strong>Name</strong>: Input needs to match the name of a file exactly, ignoring case. Also supports unix shell-style wildcards, which are not the same as regular expressions (also ignoring case).</p></li>
-                <li><p><strong>Name contains</strong>: The name of a file must contain input, ignoring case.</p></li>
-                <li><p><strong>File Type</strong>: Select groups of files types that should be included in search results.</p></li>
-                    <li><p><strong>Directory</strong>: The directory tree to search in. Excluding subdirectory content is currently not possibly</p></li>
+                    <li><p><strong>Name</strong>: Multiple different modes can be selected.</p>
+
+                    <ul>
+                    <li>Name <strong>is</strong>: Input needs to match the file name exactly. Also supports unix shell-style wildcards, which are not the same as regular expressions.
+                    <ul>
+                    <li>Usage:
+
+                    <p><table>
+                    <thead>
+                    <tr>
+                    <th>Pattern</th>
+                    <th>Meaning</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                    <td>*</td>
+                    <td>matches everything</td>
+                    </tr>
+                    <tr>
+                    <td>?</td>
+                    <td>matches any single character</td>
+                    </tr>
+                    <tr>
+                    <td>[seq]</td>
+                    <td>matches any character in seq</td>
+                    </tr>
+                    <tr>
+                    <td>[!seq]</td>
+                    <td>matches any character not in seq</td>
+                    </tr>
+                    </tbody>
+                    </table></li>
+                    </ul></li></p>
+                    <li>Name <strong>contains</strong>: The file name must contain input.</li>
+                    <li>Name <strong>begins with</strong>: The file name must start with the input</li>
+                    <li>Name <strong>ends with</strong>: The file name (without the file ending) must end with input. So <code>mple</code> would match with <code>Example.txt</code>.</li>
+                    <li>Name <strong>is similar to</strong>: Performs a fuzzy search. So <code>amp</code> matches with <code>Example.txt</code>. Matching percentage can be set separately.</li>
+                    <li>Name <strong>doesn't contain</strong>: Input must not be included in its entirety in the file name.</li>
+                    <li>Name <strong>in RegEx</strong>: Does a regular expression pattern matching. For a detailed explanation refer to: https://regular-expressions.info</li>
+                    </ul></li>
+                <li><p><strong>File Types</strong>: Select groups of file types that should be included in search results. Click <code>Custom</code> to change selection mode and input a file type (e.g. pdf) without the <code>.</code> that needs to match the file ending of a file exactly, ignoring case. Multiple possible file types can be separated with a semicolon (for example: <code>png;jpg;heic</code>) Click <code>Predefined</code> to switch back. Only the currently visible mode will be taken into account.</p></li>
+                <li><p><strong>Directory</strong>: The directory to search in. Excluding subdirectory is possible in <code>Advanced</code></p></li>
                 </ul>
 
                 <h2 id="toc_10">Properties-Tab</h2>
@@ -460,17 +499,21 @@
                 <ul>
                 <li><p><strong>File contains</strong>: Allows you to search in files. Input must be in the file content. This option can take really long. Your input is case-sensitive.</p></li>
                 <li><p><strong>Date created and modified</strong>: Specify a date range for the date the file has been created / modified, leave at default to ignore.</p></li>
-                <li><p><strong>File size</strong>: Input specifies file size in a range from min to max. Select the unit (Byte, Megabyte, Gigabyte...) on the right. Select "No Limit" to only set a minimum or maximum value.</p></li>
+                <li><p><strong>File size</strong>: Input specifies file size in a range from min to max. Select the unit (Byte, Megabyte, Gigabyte...) on the right. Select <code>No Limit</code> to only set a minimum or maximum value.</p></li>
                 </ul>
 
                 <h2 id="toc_11">Advanced-Tab</h2>
 
                 <p><img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/screenshots/advanced.png" height="250"></p>
-
                 <ul>
+                <li><strong>Limit folder depth</strong>: Toggle to include/exclude subdirectories or their subdirectories. Entering a custom number sets the maximum amount of subdirectories in which files are still included.
+            
+                <ul>
+                <li><p><code>0</code> or <code>No subfolders</code> means that ony the files directly in the specified directory will be included </p></li>
+                <li><p><code>1</code> means only the files in the folders that are directly in the specified dir will be considered...</p></li>
+                </ul></li>
+                <li><strong>Only search for folders or files</strong>: Toggle to only include folders or files in the search results.</p></li>
                 <li><p><strong>Search in system files</strong>: Toggle to include files in the system and library folders.</p></li>
-                <li><p><strong>File extension</strong>: Input needs to match the file extension (file type) without the &quot;.&quot;, ignoring case.</p></li>
-                <li><p><strong>Only search for folders or files</strong>: Toggle to only include folders or files in the search results.</p></li>
                 </ul>
 
                 <h2 id="toc_12">Sorting-Tab</h2>
@@ -478,15 +521,19 @@
                 <p><img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/screenshots/sorting.png" height="250"></p>
 
                 <ul>
-                <li><p><strong>None</strong> (fastest)</p></li>
-                <li><p><strong>File size</strong></p></li>
-                <li><p><strong>File name</strong></p></li>
-                <li><p><strong>Date modified</strong></p></li>
-                <li><p><strong>Date created</strong></p></li>
-                <li><p><strong>Path</strong></p></li>
-                <li><p><strong>Reverse Sort</strong>: Reverse the sorted search results.</p></li>
+                <li><p><strong>Sorting</strong>: Possible sorting options:
+
+                <ul>
+                <li><strong>None</strong> (fastest)</li>
+                <li><strong>File size</strong></li>
+                <li><strong>File name</strong></li>
+                <li><strong>Date modified</strong></li>
+                <li><strong>Date created</strong></li>
+                <li><strong>Path</strong>: Sorting Path alphabetically</li>
+                </ul></p></li>
+                <li><p><strong>Reverse Sort</strong>: Reverse the sorted search results (last comes first). Only appears if a search option is selected.</p></li>
                 </ul>
-                
+
                 <h1 id="faq" align="center">Frequently Asked Question</h1>
                 
 
@@ -495,7 +542,7 @@
 
                         <p>A: File Find is an open-source Utility for macOS, Windows and Linux, that makes it easy to find files. To search fill in the filters you need and leave the filters you don&#39;t need empty.</p>
                         
-                    <li><p>Q: <strong>Why doesn't File Find find my file/folder?</strong></p>
+                    <li><p id="file_not_found">Q: <strong>Why doesn't File Find find my file/folder?</strong></p>
 
                         <p>A: Try the following steps:
                         
@@ -539,11 +586,11 @@
 
                     <li><p>Q: <strong>Why does File Find ask for permission for Contacts, Calenders, Photos, etc...?</strong></p></li>
 
-                            <p>A: File Find scans the entire specified directory, even if files are excluded they are scanned first and then sorted out. Your photos, calendar data, contacts etc. are stored in a library folder, which means that File Find scans them. File Find does not connect to the internet at all, everything stays on your machine. You could also press &quot;Do not allow&quot;, the associated files will not appear in your search results.</p>
+                            <p>A: File Find scans the entire specified directory, even if files are excluded they are scanned first and then sorted out. Your photos, calendar data, contacts etc. are stored in a library folder, which means that File Find scans them. File Find does not connect to the internet at all, everything stays on your machine. You could also press <code>Do not allow</code>, the associated files will not appear in your search results.</p>
 
                     <li><p>Q: <strong>Why does File Find ask for permission for Downloads, Desktop, Documents, etc...?</strong></p></li>
 
-                                <p>A: On macOS if an app scans a directory this popup will automatically appear. If you press &quot;Don&#39;t allow&quot;, File Find will still be able to scan those files, but you are not going to be able to save searches in those directories.</p>
+                                <p>A: On macOS if an app scans a directory this popup will automatically appear. If you press <code>Don't allow</code>, File Find will still be able to scan those files, but you are not going to be able to save searches in those directories.</p>
 
                     <li><p>Q: <strong>Does File Find connect to the Internet?</strong></p></li>
                                 
