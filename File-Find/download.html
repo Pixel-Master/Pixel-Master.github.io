@@ -380,7 +380,7 @@
                 
                 <br>
                 
-                <h1 style="font-size:20px" align="center">Newest Version (1.2)</h1>
+                <h1 style="font-size:20px" align="center">Newest Version (2.0)</h1>
 
                 
                 <br>
@@ -394,7 +394,7 @@
                             <div align="center" class="cta button alt"><a href="https://github.com/Pixel-Master/File-Find/releases/latest/download/File-Find.exe">Windows</a></div>
                         </th>
                         <th>
-                            <div align="center" class="cta button alt"><a href="https://github.com/Pixel-Master/File-Find/archive/refs/tags/v1.2.tar.gz">Linux</a></div>
+                            <div align="center" class="cta button alt"><a href="https://github.com/Pixel-Master/File-Find/archive/refs/tags/v2.0.tar.gz">Linux</a></div>
                         </th>
                 </tr>
                 <tr>
@@ -404,14 +404,14 @@
                 </tr>
                 <tr>
                     <th>
-                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.dmg) · 59.3 MB</p>
+                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.dmg) · 58 MB</p>
                     </th>
                     
                     <th>
-                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.exe) · 21.7 MB</p>
+                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.exe) · 22.4 MB</p>
                     </th>
                     <th>
-                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.tar.gz) · 426 KB</p>
+                        <p align="center" color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">(.tar.gz) · 434 KB</p>
                     </th>
                 </tr>
                 </table>
@@ -422,6 +422,75 @@
                     <img src="https://raw.githubusercontent.com/Pixel-Master/Pixel-Master.github.io/main/File-Find/preview/preview_round.png" height="300"></p>
                 
                 <p id="newest" style="font-size:30px" align="center"><strong>Versions</strong></p>
+                
+                <!-- Begin of 2.0 -->
+                
+                <h1 id="2.0">File Find 2.0</h1>
+                <p color="#d3d3d3" style="font-family:Arial; color:grey;font-size:15px">21. June 2025 · <a href="https://github.com/Pixel-Master/File-Find/releases/tag/v2.2">View on GitHub</a></p>
+                
+                <h3>Downloads</h3>
+                
+                <ul>
+                <li><a href="https://github.com/Pixel-Master/File-Find/releases/download/v2.0/File-Find.dmg">macOS (recommended): File-Find.dmg (58 MB, macOS 12 or later, Universal)</a></li>
+                <li><i><a href="https://github.com/Pixel-Master/File-Find/releases/download/v2.0/File-Find.app.zip">macOS: File-Find.app.zip (62.1 MB, macOS 12 or later, Universal)</a></li>
+                <li><a href="https://github.com/Pixel-Master/File-Find/releases/download/v2.0/File-Find-Apple-Silicon.app.zip">macOS: File-Find-Apple-Silicon.app.zip (29.7 MB, macOS 12 or later, only Apple Silicon)</a></li>
+                <li><a href="https://github.com/Pixel-Master/File-Find/releases/download/v2.0/File-Find-Intel.app.zip">macOS: File-Find-Intel.app.zip (32.6 MB, macOS 12 or later, only Intel)</a></i></li>
+                <li><a href="https://github.com/Pixel-Master/File-Find/releases/download/v2.0/File-Find.exe">Windows: File-Find.exe (22.4 MB, Windows 10 (at least 1809) or later)</a></li>
+                <li><a href="https://github.com/Pixel-Master/File-Find/releases/download/v2.0/File-Find.bin">Linux: File-Find.bin (43.6 MB, x86-64)</a></li>
+                <li><a href="https://github.com/Pixel-Master/File-Find/archive/refs/tags/v2.0.tar.gz">Source code: File-Find-2.0.tar.gz (434 KB)</a></li>
+                </ul>
+                
+                
+                
+                <h3>Changelog</h3>
+
+                    <h4>New Features</h4>
+
+                        <ul>
+                        <li>Completely changed <code>Name</code> and <code>Name contains</code> into a single line with a dropdown, adding the following options:
+
+                        <ul>
+                        <li><i>Name is</i> (with wildcard, already existed)</li>
+                        <li><i>Name contains</i> (already existed)</li>
+                        <li>Name begins with</li>
+                        <li>Name end with (discarding the file extension)</li>
+                        <li>Name is similar to (fuzzy search with the ability to set the exact matching percentage)</li>
+                        <li>doesn't contain</li>
+                        <li>in RegEx</li>
+                        </ul></li>
+                        <li>Merged file extension and predefined file group selection into one option</li>
+                        <li>Added new folder depth filter</li>
+                        <li>Added new <code>Consider case</code> checkbox</li>
+                        <li>Added a new tutorial when first opening File Find</li>
+                        <li>Marked files are now saved and loaded when the saved search file is opened</li>
+                        <li>Reloading is now possible in duplicated</li>
+                        <li>Changed Reverse sort and system files into checkboxes</li>
+                        <li>Made bottom buttons (Open, Info, Delete, Move) right-clickable for all options</li>
+                        <li>Updated update notice</li>
+                    </ul>
+
+                    <h4>Bugfixes</h4>
+
+                        <ul>
+                        <li>Removed option to create a terminal command as it didn't really work and had no real use</li>
+                        <li>Fixed a bug where the menubar search status wouldn't be visible on Windows</li>
+                        <li>Fixed deletion of files on Windows</li>
+                        <li>Fixed Copy to Clipboard now working on all platforms</li>
+                        <li>Fixed <code>Open in File Explorer</code> on Windows</li>
+                        <li>Removed <code>Open with specific app</code> on Windows and Linux as it never worked</li>
+                        <li>Unified font and made it smaller</li>
+                        <li>Added a <code>Seconds needed</code> text to compare</li>
+                        <li>On Windows File Find now closes after last window is closed</li>
+                        <li>If left unchanged creation and modification time edits now update time at midnight</li>
+                        <li>Completely changed cache handling and storage</li>
+                        <li>Fixed bug in duplicated where if there was only a singe duplicated file it wouldn't show up</li>
+                        </ul>
+
+                
+                <br>
+                
+                <!-- End of 2.0 -->
+                
                 
                 <!-- Begin of 1.2 -->
                 
