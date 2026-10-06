@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRNU Analysis</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
+<script type="module" src="https://pyscript.net/releases/2025.8.1/core.js"></script>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:860px;margin:2rem auto;padding:0 1rem;line-height:1.5}
+  fieldset{border:1px solid #bbb;border-radius:6px;margin:1rem 0}
+  button{padding:.4rem .9rem;margin:.3rem 0}
+  img{image-rendering:pixelated;max-width:100%;border:1px solid #888;margin-top:.5rem}
+  .res{margin-top:.8rem;font-weight:600}
+  .muted{color:#777;font-weight:400}
+  .err{color:#b00020}
+  #status{background:#fff3cd;padding:.5rem;border-radius:4px}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<h1>PRNU Analysis</h1>
+<p id="status">Python is being loaded, please wait...</p>
+
+<label><input type="radio" name="mode" value="m1" checked>AI Detector</label><br>
+<label><input type="radio" name="mode" value="m2">Camera Identification</label>
+
+<!-- Mode 1 -->
+<fieldset id="m1">
+  <legend>Mode 1: AI Detector</legend>
+  <input type="file" id="img1" accept="image/png,image/jpeg,image/tiff">
+  <button id="go1" disabled>Analyze</button>
+  <div id="out1"></div>
+</fieldset>
+
+<!-- Mode 2 -->
+<fieldset id="m2" class="hide">
+  <legend>Mode 2: Camera Identification</legend>
+  <b>1. Reference images (of the same camera)</b><br>
+  <input type="file" id="refs" accept="image/png,image/jpeg,image/tiff" multiple><br>
+  <label><input type="checkbox" id="nozm"> Deactivate Zero-Meaning<details>  <summary>What is Zero-Meaning?</summary>
+      <p>Activate this if you want to increase correlation between images taken with the same camera model but not the exact same camera.</p></details></label><br>
+  <span style="display: block; height: 4px;"></span>
+  <span style="display: block; height: 8px;"></span>
+  <button id="goref" disabled>Calculate Reference</button>
+  <div id="outref"></div>
+  <hr>
+  <b>2. Test Image</b><br>
+  <input type="file" id="test" accept="image/png,image/jpeg,image/tiff">
+  <button id="gotest" disabled>Compare</button>
+  <div id="outtest"></div>
+</fieldset>
+
+<details>
+  <summary>Explanation</summary>
+  <p>In Mode 1, you can input an image and let it be tested with the AI detector. It will also give you a visible PRNU noise pattern.</p>
+  <p>In Mode 2, you can provide reference images of the camera you want your image to be compared with. The best images for this purpose are photos of bright white walls. The better your reference images, the fewer you need for a satisfactory result. Afterwards, calculate your reference and provide a test image.</p>
+  <h3>What is PRNU?</h3>
+  <p>For a detailed explanation, please refer to the paper. PRNU (Photo-Response Non-Uniformity) is a noise pattern created by imprecisions in camera sensor production.</p>
+  <p></p>
+</details>
+
+<script>
+  // Switch mode
+  document.querySelectorAll('input[name=mode]').forEach(r => r.addEventListener('change', () => {
+    document.getElementById('m1').classList.toggle('hide', r.value !== 'm1' && r.checked);
+    document.getElementById('m2').classList.toggle('hide', r.value !== 'm2' && r.checked);
+    const v = document.querySelector('input[name=mode]:checked').value;
+    document.getElementById('m1').classList.toggle('hide', v !== 'm1');
+    document.getElementById('m2').classList.toggle('hide', v !== 'm2');
+  }));
+
+  // ONNX inference (Input: float32 [1,1,512,512], Output: P(AI) via Softmax, Class 0 = "ai")
+  let session = null;
+  window.runModel = async function (data) {
+    if (!session) session = await ort.InferenceSession.create('prnu_ai_predictor.onnx');
+    const t = new ort.Tensor('float32', data, [1, 1, 512, 512]);
+    const out = await session.run({ [session.inputNames[0]]: t });
+    const l = out[session.outputNames[0]].data;
+    const m = Math.max(l[0], l[1]);
+    const e0 = Math.exp(l[0] - m), e1 = Math.exp(l[1] - m);
+    return e0 / (e0 + e1);
+  };
+</script>
+
+<script type="py" config='{"packages":["numpy","scipy","opencv-python"],"files":{"./prnu.py":"./prnu.py","./ai_predictor.py":"./ai_predictor.py"}}'>
+import sys, os, base64, asyncio, types
+from unittest.mock import MagicMock
+import numpy as np
+import cv2
+from pyscript import document, window, when
+from pyodide.ffi import to_js
+
+# ai_predictor imports PyTorch/sklearn, which are not available in the browser. For the import they are
+# replaced by placeholders; only Model.extract_prnu (pure numpy/prnu) is needed.
+for name in ("torch", "torch.nn", "torch.optim", "torchvision", "torchvision.models", "sklearn", "sklearn.utils"):
+    sys.modules[name] = MagicMock()
+import prnu
+import ai_predictor
+
+THRESHOLD = 0.008  # according to prnu.Compare.correlate()
+state = {"avg": None}
+
+
+def q(sel):
+    return document.querySelector(sel)
+
+
+def out(sel, html):
+    q(sel).innerHTML = html
+
+
+async def read_file(f):
+    buf = await f.arrayBuffer()
+    return bytes(buf.to_py())
+
+
+def write_tmp(data, name):
+    path = "/tmp/" + name
+    with open(path, "wb") as fh:
+        fh.write(data)
+    return path
+
+
+def extract(path, zm_off=False, disable_crop=False):
+    try:
+        ex = prnu.NoiseExtractor(image_path=path, disable_crop=disable_crop)
+    except ReferenceError:
+        return None
+    ex.extract_noise(disable_zero_meaning=zm_off)
+    return ex
+
+
+def visual_url(arr):
+    # shift_to_visual modifies the image; therefore work on a copy
+    v = prnu.NoiseExtractor(image=arr.copy(), disable_crop=True)
+    v.shift_to_visual()
+    ok, buf = cv2.imencode(".png", v.image)
+    return "data:image/png;base64," + base64.b64encode(buf.tobytes()).decode()
+
+
+async def busy(sel, text):
+    out(sel, '<span class="muted">' + text + '</span>')
+    await asyncio.sleep(0.05)
+
+
+# ---------- Mode 1 ----------
+@when("click", "#go1")
+async def analyse_single(event):
+    files = q("#img1").files
+    if files.length == 0:
+        out("#out1", '<span class="err">Please choose an image</span>')
+        return
+    await busy("#out1", "Calculating …")
+    path = write_tmp(await read_file(files.item(0)), "single")
+    ex = extract(path, disable_crop=True, zm_off=True)
+    if ex is None:
+        out("#out1", '<span class="err">File couldn\'t be loaded as image.</span>')
+        return
+    html = '<div>Noise pattern (' + str(ex.image.shape[1]) + '×' + str(ex.image.shape[0]) + '):</div>'
+    html += '<img src="' + visual_url(ex.image) + '">'
+
+    # AI evaluation: preprocessing from ai_predictor.Model.extract_prnu, inference via ONNX
+    dummy = types.SimpleNamespace(target_shape=(512, 512))
+    noise = ai_predictor.Model.extract_prnu(dummy, path)
+    if noise is None:
+        html += '<div class="res err">AI evaluation not possible. Image has to be at least 512x512.</div>'
+    else:
+        try:
+            p = await window.runModel(to_js(np.ascontiguousarray(noise).ravel().data))
+            html += '<div class="res">AI-Probability: ' + format(p * 100, ".1f") + ' %'
+            html += ' <span class="muted">(' + ("more likely AI generated" if p >= 0.5 else "more likely real") + ')</span></div>'
+        except Exception as e:
+            html += '<div class="res err">Model couldn\'t be executed (does prnu_ai_predictor.onnx exist?): ' + str(e) + '</div>'
+    out("#out1", html)
+
+
+# ---------- Mode 2 ----------
+@when("click", "#goref")
+async def build_reference(event):
+    files = q("#refs").files
+    if files.length == 0:
+        out("#outref", '<span class="err">Please choose reference images.</span>')
+        return
+    zm_off = bool(q("#nozm").checked)
+    avg = prnu.AverageNoise()
+    used = skipped = 0
+    for i in range(files.length):
+        await busy("#outref", "Processing image " + str(i + 1) + "/" + str(files.length) + " …")
+        path = write_tmp(await read_file(files.item(i)), "ref")
+        ex = extract(path, zm_off)
+        if ex is None or (avg.dimensions is not None and ex.denoised.shape != avg.dimensions):
+            skipped += 1
+            continue
+        avg.add_image_data(ex)
+        used += 1
+    if used == 0:
+        out("#outref", '<span class="err">No usable reference images</span>')
+        return
+    avg.analyse(disable_zero_meaning=zm_off)
+    state["avg"] = avg
+    q("#gotest").disabled = False
+    html = '<div class="res">Reference from ' + str(used) + ' processed image(s)'
+    html += ' (Zero-Meaning ' + ("deactivated" if zm_off else "activated") + ')'
+    if skipped:
+        html += '<span class="muted">, ' + str(skipped) + ' skipped (no image or wrong size)</span>'
+    html += '</div><img src="' + visual_url(avg.image) + '">'
+    out("#outref", html)
+
+
+@when("click", "#gotest")
+async def compare_test(event):
+    files = q("#test").files
+    if files.length == 0:
+        out("#outtest", '<span class="err">Please choose a test image.</span>')
+        return
+    await busy("#outtest", "Comparing …")
+    path = write_tmp(await read_file(files.item(0)), "test")
+    ex = extract(path)
+    if ex is None:
+        out("#outtest", '<span class="err">File couldn\'t be loaded as image.</span>')
+        return
+    if ex.noise_residual.shape != state["avg"].image.shape:
+        out("#outtest", '<span class="err">Size of the reference images doesn\'t match that of the test image. Correlation would return zero.</span>')
+        return
+    score = float(prnu.Compare(ex, state["avg"]).correlate())
+    same = score > THRESHOLD
+    out("#outtest", '<div class="res">Correlation: ' + format(score, ".5f") + ' <span class="muted">(Threshold ' + str(THRESHOLD) + ')</span><br>'
+        + ("Probably taken with the same camera" if same else "Probably not the same camera") + '</div>')
+
+
+for sel in ("#go1", "#goref"):
+    q(sel).disabled = False
+st = q("#status")
+st.innerText = "Ready."
+</script>
+</body>
+</html>
