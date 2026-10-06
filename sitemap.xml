@@ -73,6 +73,15 @@
 
    </url>
    
+   <url>
+
+      <loc>https://pixel-master.github.io/prnu/index.html</loc>
+
+      <changefreq>monthly</changefreq>
+
+      <priority>0.7</priority>
+
+   </url>
 
    
 </urlset>
