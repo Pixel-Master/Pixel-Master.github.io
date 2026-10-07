@@ -40,7 +40,7 @@
   <b>1. Reference images (of the same camera)</b><br>
   <input type="file" id="refs" accept="image/png,image/jpeg,image/tiff" multiple><br>
   <label><input type="checkbox" id="nozm"> Deactivate Zero-Meaning<details>  <summary>What is Zero-Meaning?</summary>
-      <p>Activate this if you want to increase correlation between images taken with the same camera model but not the exact same camera.</p></details></label><br>
+      <p>Deactivate Zero-Meaning if you want to increase correlation between images taken with the same camera model but not the exact same camera.</p></details></label><br>
   <span style="display: block; height: 4px;"></span>
   <span style="display: block; height: 8px;"></span>
   <button id="goref" disabled>Calculate Reference</button>
@@ -62,178 +62,198 @@
 </details>
 
 <script>
-  // Switch mode
+  // Show only the fieldset of the selected mode
   document.querySelectorAll('input[name=mode]').forEach(r => r.addEventListener('change', () => {
-    document.getElementById('m1').classList.toggle('hide', r.value !== 'm1' && r.checked);
-    document.getElementById('m2').classList.toggle('hide', r.value !== 'm2' && r.checked);
-    const v = document.querySelector('input[name=mode]:checked').value;
-    document.getElementById('m1').classList.toggle('hide', v !== 'm1');
-    document.getElementById('m2').classList.toggle('hide', v !== 'm2');
+    const mode = document.querySelector('input[name=mode]:checked').value;
+    document.getElementById('m1').classList.toggle('hide', mode !== 'm1');
+    document.getElementById('m2').classList.toggle('hide', mode !== 'm2');
   }));
 
-  // ONNX inference (Input: float32 [1,1,512,512], Output: P(AI) via Softmax, Class 0 = "ai")
+  // ONNX inference, called from Python.
+  // Input: float32 [1,1,512,512] noise. Output: raw P(AI) via softmax (class 0 = "ai").
+  // The threshold scaling is done afterwards in Python.
   let session = null;
   window.runModel = async function (data) {
+    // Load the model only once, on first use
     if (!session) session = await ort.InferenceSession.create('prnu_ai_predictor.onnx');
-    const t = new ort.Tensor('float32', data, [1, 1, 512, 512]);
-    const out = await session.run({ [session.inputNames[0]]: t });
-    const l = out[session.outputNames[0]].data;
-    const m = Math.max(l[0], l[1]);
-    const e0 = Math.exp(l[0] - m), e1 = Math.exp(l[1] - m);
-    return e0 / (e0 + e1);
+    const input = new ort.Tensor('float32', data, [1, 1, 512, 512]);
+    const result = await session.run({ [session.inputNames[0]]: input });
+    const logits = result[session.outputNames[0]].data;
+    // Subtracting the maximum keeps exp() numerically stable
+    const max = Math.max(logits[0], logits[1]);
+    const eAi = Math.exp(logits[0] - max), eReal = Math.exp(logits[1] - max);
+    return eAi / (eAi + eReal);
   };
 </script>
 
 <script type="py" config='{"packages":["numpy","scipy","opencv-python"],"files":{"./prnu.py":"./prnu.py","./ai_predictor.py":"./ai_predictor.py"}}'>
-import sys, os, base64, asyncio, types
+import sys, base64, asyncio, types
 from unittest.mock import MagicMock
 import numpy as np
 import cv2
 from pyscript import document, window, when
 from pyodide.ffi import to_js
 
-# ai_predictor imports PyTorch/sklearn, which are not available in the browser. For the import they are
-# replaced by placeholders; only Model.extract_prnu (pure numpy/prnu) is needed.
+# ai_predictor imports PyTorch/sklearn, which don't exist in the browser. They are replaced by
+# placeholders so the import works; only Model.extract_prnu and Model._scale_probability are used
+# (both need neither torch nor sklearn).
 for name in ("torch", "torch.nn", "torch.optim", "torchvision", "torchvision.models", "sklearn", "sklearn.utils"):
     sys.modules[name] = MagicMock()
 import prnu
 import ai_predictor
 
-THRESHOLD = 0.008  # according to prnu.Compare.correlate()
+# Correlation above this value suggests the same camera (see prnu.Compare.correlate)
+CORRELATION_THRESHOLD = 0.008
+# Threshold that balances false positives and false negatives of the AI model.
+# Raw probabilities are rescaled around it so that 0.5 marks the decision boundary.
+OPTIMAL_THRESHOLD = 0.97
+# Holds the reference (AverageNoise) between button clicks
 state = {"avg": None}
 
 
-def q(sel):
-    return document.querySelector(sel)
+# ---------- Helpers ----------
+def q(selector):
+    return document.querySelector(selector)
 
 
-def out(sel, html):
-    q(sel).innerHTML = html
+def show(selector, html):
+    """Replace the content of an element."""
+    q(selector).innerHTML = html
 
 
-async def read_file(f):
-    buf = await f.arrayBuffer()
-    return bytes(buf.to_py())
+def show_error(selector, message):
+    show(selector, '<span class="err">' + message + '</span>')
 
 
-def write_tmp(data, name):
-    path = "/tmp/" + name
-    with open(path, "wb") as fh:
-        fh.write(data)
-    return path
-
-
-def extract(path, zm_off=False, disable_crop=False):
-    try:
-        ex = prnu.NoiseExtractor(image_path=path, disable_crop=disable_crop)
-    except ReferenceError:
-        return None
-    ex.extract_noise(disable_zero_meaning=zm_off)
-    return ex
-
-
-def visual_url(arr):
-    # shift_to_visual modifies the image; therefore work on a copy
-    v = prnu.NoiseExtractor(image=arr.copy(), disable_crop=True)
-    v.shift_to_visual()
-    ok, buf = cv2.imencode(".png", v.image)
-    return "data:image/png;base64," + base64.b64encode(buf.tobytes()).decode()
-
-
-async def busy(sel, text):
-    out(sel, '<span class="muted">' + text + '</span>')
+async def show_busy(selector, message):
+    """Show a progress message and give the browser a moment to repaint before heavy computation."""
+    show(selector, '<span class="muted">' + message + '</span>')
     await asyncio.sleep(0.05)
 
 
-# ---------- Mode 1 ----------
+async def save_upload(file, name):
+    """Copy an uploaded browser file into Pyodide's virtual file system; returns its path.
+    The prnu module reads images via cv2.imread, which needs a real path."""
+    data = bytes((await file.arrayBuffer()).to_py())
+    path = "/tmp/" + name
+    with open(path, "wb") as f:
+        f.write(data)
+    return path
+
+
+def extract(path, zero_mean_off=False, disable_crop=False):
+    """Extract the PRNU noise of an image. Returns the NoiseExtractor, or None if it isn't a valid image."""
+    try:
+        extractor = prnu.NoiseExtractor(image_path=path, disable_crop=disable_crop)
+    except ReferenceError:
+        return None
+    extractor.extract_noise(disable_zero_meaning=zero_mean_off)
+    return extractor
+
+
+def noise_to_png_url(noise):
+    """Turn a noise array into a visible PNG data URL for an <img> tag."""
+    # shift_to_visual() modifies its image irreversibly, so use a throwaway extractor on a copy
+    visual = prnu.NoiseExtractor(image=noise.copy(), disable_crop=True)
+    visual.shift_to_visual()
+    _, png = cv2.imencode(".png", visual.image)
+    return "data:image/png;base64," + base64.b64encode(png.tobytes()).decode()
+
+
+# ---------- Mode 1: AI detector ----------
 @when("click", "#go1")
 async def analyse_single(event):
     files = q("#img1").files
     if files.length == 0:
-        out("#out1", '<span class="err">Please choose an image</span>')
-        return
-    await busy("#out1", "Calculating …")
-    path = write_tmp(await read_file(files.item(0)), "single")
-    ex = extract(path, disable_crop=True, zm_off=True)
-    if ex is None:
-        out("#out1", '<span class="err">File couldn\'t be loaded as image.</span>')
-        return
-    html = '<div>Noise pattern (' + str(ex.image.shape[1]) + '×' + str(ex.image.shape[0]) + '):</div>'
-    html += '<img src="' + visual_url(ex.image) + '">'
+        return show_error("#out1", "Please choose an image")
+    await show_busy("#out1", "Calculating …")
 
-    # AI evaluation: preprocessing from ai_predictor.Model.extract_prnu, inference via ONNX
-    dummy = types.SimpleNamespace(target_shape=(512, 512))
-    noise = ai_predictor.Model.extract_prnu(dummy, path)
+    path = await save_upload(files.item(0), "single")
+    # Visible pattern: whole image (no crop), zero-meaning off
+    extractor = extract(path, zero_mean_off=True, disable_crop=True)
+    if extractor is None:
+        return show_error("#out1", "File couldn't be loaded as image.")
+    height, width = extractor.image.shape
+    html = '<div>Noise pattern (' + str(width) + '×' + str(height) + '):</div>'
+    html += '<img src="' + noise_to_png_url(extractor.image) + '">'
+
+    # AI input: reuse the model's own preprocessing (512x512 center crop, standardised noise).
+    # extract_prnu only reads self.target_shape, so a tiny stand-in object replaces a full Model.
+    stand_in = types.SimpleNamespace(target_shape=(512, 512))
+    noise = ai_predictor.Model.extract_prnu(stand_in, path)
     if noise is None:
         html += '<div class="res err">AI evaluation not possible. Image has to be at least 512x512.</div>'
     else:
         try:
-            p = await window.runModel(to_js(np.ascontiguousarray(noise).ravel().data))
+            # Raw probability from the ONNX model, then rescaled around the optimal threshold
+            raw = await window.runModel(to_js(np.ascontiguousarray(noise).ravel().data))
+            p = ai_predictor.Model._scale_probability(raw, OPTIMAL_THRESHOLD)
             html += '<div class="res">AI-Probability: ' + format(p * 100, ".1f") + ' %'
             html += ' <span class="muted">(' + ("more likely AI generated" if p >= 0.5 else "more likely real") + ')</span></div>'
         except Exception as e:
             html += '<div class="res err">Model couldn\'t be executed (does prnu_ai_predictor.onnx exist?): ' + str(e) + '</div>'
-    out("#out1", html)
+    show("#out1", html)
 
 
-# ---------- Mode 2 ----------
+# ---------- Mode 2: camera identification ----------
 @when("click", "#goref")
 async def build_reference(event):
     files = q("#refs").files
     if files.length == 0:
-        out("#outref", '<span class="err">Please choose reference images.</span>')
-        return
-    zm_off = bool(q("#nozm").checked)
+        return show_error("#outref", "Please choose reference images.")
+    zero_mean_off = bool(q("#nozm").checked)
+
     avg = prnu.AverageNoise()
     used = skipped = 0
     for i in range(files.length):
-        await busy("#outref", "Processing image " + str(i + 1) + "/" + str(files.length) + " …")
-        path = write_tmp(await read_file(files.item(i)), "ref")
-        ex = extract(path, zm_off)
-        if ex is None or (avg.dimensions is not None and ex.denoised.shape != avg.dimensions):
+        await show_busy("#outref", "Processing image " + str(i + 1) + "/" + str(files.length) + " …")
+        extractor = extract(await save_upload(files.item(i), "ref"), zero_mean_off)
+        # Skip non-images and images whose size differs from the first accepted one
+        if extractor is None or (avg.dimensions is not None and extractor.denoised.shape != avg.dimensions):
             skipped += 1
             continue
-        avg.add_image_data(ex)
+        avg.add_image_data(extractor)
         used += 1
+
     if used == 0:
-        out("#outref", '<span class="err">No usable reference images</span>')
-        return
-    avg.analyse(disable_zero_meaning=zm_off)
+        return show_error("#outref", "No usable reference images")
+    # Combine all added images into one average noise pattern
+    avg.analyse(disable_zero_meaning=zero_mean_off)
     state["avg"] = avg
     q("#gotest").disabled = False
+
     html = '<div class="res">Reference from ' + str(used) + ' processed image(s)'
-    html += ' (Zero-Meaning ' + ("deactivated" if zm_off else "activated") + ')'
+    html += ' (Zero-Meaning ' + ("deactivated" if zero_mean_off else "activated") + ')'
     if skipped:
         html += '<span class="muted">, ' + str(skipped) + ' skipped (no image or wrong size)</span>'
-    html += '</div><img src="' + visual_url(avg.image) + '">'
-    out("#outref", html)
+    html += '</div><img src="' + noise_to_png_url(avg.image) + '">'
+    show("#outref", html)
 
 
 @when("click", "#gotest")
 async def compare_test(event):
     files = q("#test").files
     if files.length == 0:
-        out("#outtest", '<span class="err">Please choose a test image.</span>')
-        return
-    await busy("#outtest", "Comparing …")
-    path = write_tmp(await read_file(files.item(0)), "test")
-    ex = extract(path)
-    if ex is None:
-        out("#outtest", '<span class="err">File couldn\'t be loaded as image.</span>')
-        return
-    if ex.noise_residual.shape != state["avg"].image.shape:
-        out("#outtest", '<span class="err">Size of the reference images doesn\'t match that of the test image. Correlation would return zero.</span>')
-        return
-    score = float(prnu.Compare(ex, state["avg"]).correlate())
-    same = score > THRESHOLD
-    out("#outtest", '<div class="res">Correlation: ' + format(score, ".5f") + ' <span class="muted">(Threshold ' + str(THRESHOLD) + ')</span><br>'
-        + ("Probably taken with the same camera" if same else "Probably not the same camera") + '</div>')
+        return show_error("#outtest", "Please choose a test image.")
+    await show_busy("#outtest", "Comparing …")
+
+    extractor = extract(await save_upload(files.item(0), "test"))
+    if extractor is None:
+        return show_error("#outtest", "File couldn't be loaded as image.")
+    # Compare would silently return 0 on a size mismatch, so tell the user instead
+    if extractor.noise_residual.shape != state["avg"].image.shape:
+        return show_error("#outtest", "Size of the reference images doesn't match that of the test image. Correlation would return zero.")
+
+    score = float(prnu.Compare(extractor, state["avg"]).correlate())
+    verdict = "Probably taken with the same camera" if score > CORRELATION_THRESHOLD else "Probably not the same camera"
+    show("#outtest", '<div class="res">Correlation: ' + format(score, ".5f")
+         + ' <span class="muted">(Threshold ' + str(CORRELATION_THRESHOLD) + ')</span><br>' + verdict + '</div>')
 
 
-for sel in ("#go1", "#goref"):
-    q(sel).disabled = False
-st = q("#status")
-st.innerText = "Ready."
+# ---------- Startup: Python is ready, enable the buttons ----------
+for button in ("#go1", "#goref"):
+    q(button).disabled = False
+q("#status").innerText = "Ready."
 </script>
 </body>
 </html>
