@@ -23,12 +23,12 @@
 <h1>PRNU Analysis</h1>
 <p id="status">Python is being loaded, please wait...</p>
 
-<label><input type="radio" name="mode" value="m1" checked>AI Detector</label><br>
+<label><input type="radio" name="mode" value="m1" checked>AI Detector (+ visible Noise Pattern)</label><br>
 <label><input type="radio" name="mode" value="m2">Camera Identification</label>
 
 <!-- Mode 1 -->
 <fieldset id="m1">
-  <legend>Mode 1: AI Detector</legend>
+  <legend>Mode 1: AI Detector (+ visible Noise Pattern)</legend>
   <input type="file" id="img1" accept="image/png,image/jpeg,image/tiff">
   <button id="go1" disabled>Analyze</button>
   <div id="out1"></div>
@@ -54,10 +54,13 @@
 
 <details>
   <summary>Explanation</summary>
-  <p>In Mode 1, you can input an image and let it be tested with the AI detector. It will also give you a visible PRNU noise pattern.</p>
-  <p>In Mode 2, you can provide reference images of the camera you want your image to be compared with. The best images for this purpose are photos of bright white walls. The better your reference images, the fewer you need for a satisfactory result. Afterwards, calculate your reference and provide a test image.</p>
+  <p>In Mode 1, you can input an image and let it be tested with the AI detector. It will also give you a visible PRNU noise pattern.</p><br>
+  <p>In Mode 2, you can provide reference images of the camera you want your image to be compared with. The best images for this purpose are photos of bright white walls. The better your reference images, the fewer you need for a satisfactory result. Note that all reference and test images must be of the same resolution and must all be taken in either landscape or potrait mode.</p>
+    <p>Afterwards, calculate your reference and provide a test image. Note that the worse your images are (i.e. dark, bad resolution) the more you need and the lower the correlation score will be. Take the thrshold of 0.008 with a grain of salt. If your correlation is higher it can bes quite safely assumed that the images were taken with the same camera. If you were to only have one reference image a correlation score of 0.006 would probably already mean that the images were taken with the same camera.</p>
   <h3>What is PRNU?</h3>
-  <p>For a detailed explanation, please refer to the paper. PRNU (Photo-Response Non-Uniformity) is a noise pattern created by imprecisions in camera sensor production.</p>
+  <p>For a detailed explanation, please refer to the paper. PRNU (Photo-Response Non-Uniformity) is a noise pattern created by imprecisions during camera sensor production.</p>
+  <h3>How do I use this in my project?</h3>
+  <p>You can install the code used in this demonstration as a python packkage called <code>prnu</prnu> that can be downloaded from <a href="https://pypi.org/project/prnu/"></a>PyPi. It is also available on <a href="https://github.com/pixel-master/prnu">GitHub</a></p>
   <p></p>
 </details>
 
@@ -247,7 +250,7 @@ async def compare_test(event):
     score = float(prnu.Compare(extractor, state["avg"]).correlate())
     verdict = "Probably taken with the same camera" if score > CORRELATION_THRESHOLD else "Probably not the same camera"
     show("#outtest", '<div class="res">Correlation: ' + format(score, ".5f")
-         + ' <span class="muted">(Threshold ' + str(CORRELATION_THRESHOLD) + ')</span><br>' + verdict + '</div>')
+         + ' <span class="muted">(Conservative Threshold ' + str(CORRELATION_THRESHOLD) + ')</span><br>' + verdict + '</div>')
 
 
 # ---------- Startup: Python is ready, enable the buttons ----------
