@@ -54,13 +54,13 @@
 
 <details>
   <summary>Explanation</summary>
-  <p>In Mode 1, you can input an image and let it be tested with the AI detector. It will also give you a visible PRNU noise pattern.</p><br>
+  <p>In Mode 1, you can input an image and let it be tested with the AI detector. It will also give you a visible PRNU noise pattern.</p>
   <p>In Mode 2, you can provide reference images of the camera you want your image to be compared with. The best images for this purpose are photos of bright white walls. The better your reference images, the fewer you need for a satisfactory result. Note that all reference and test images must be of the same resolution and must all be taken in either landscape or potrait mode.</p>
-    <p>Afterwards, calculate your reference and provide a test image. Note that the worse your images are (i.e. dark, bad resolution) the more you need and the lower the correlation score will be. Take the thrshold of 0.008 with a grain of salt. If your correlation is higher it can bes quite safely assumed that the images were taken with the same camera. If you were to only have one reference image a correlation score of 0.006 would probably already mean that the images were taken with the same camera.</p>
+    <p>Afterwards, calculate your reference and provide a test image. Note that the worse your images are (i.e. dark, bad resolution) the more you need and the lower the correlation score will be. Take the threshold of 0.008 with a grain of salt. If your correlation is higher than the threshold (0.008) it can be quite safely assumed that the images were taken with the same camera. If you were to only have one reference image, a correlation score of 0.006 would already mean a quite high likelihood that the images were taken with the same camera.</p>
   <h3>What is PRNU?</h3>
   <p>For a detailed explanation, please refer to the paper. PRNU (Photo-Response Non-Uniformity) is a noise pattern created by imprecisions during camera sensor production.</p>
   <h3>How do I use this in my project?</h3>
-  <p>You can install the code used in this demonstration as a python packkage called <code>prnu</prnu> that can be downloaded from <a href="https://pypi.org/project/prnu/"></a>PyPi. It is also available on <a href="https://github.com/pixel-master/prnu">GitHub</a></p>
+  <p>You can install the code used in this demonstration as a python packkage called <code>prnu</code> that can be downloaded from <a href="https://pypi.org/project/prnu/">PyPi</a>. It is also available on <a href="https://github.com/pixel-master/prnu">GitHub</a></p>
   <p></p>
 </details>
 
