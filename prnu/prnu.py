@@ -34,7 +34,7 @@ import scipy
 import logging
 
 # Setup logging
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.ERROR,
                     format="PRNU-kit [%(pathname)s] at %(asctime)s, %(levelname)s: %(message)s",
                     force=True)
 
@@ -221,7 +221,7 @@ class NoiseExtractor:
             cv2.imwrite(output, self.image)
             logging.debug("Wrote to file:" + output)
         else:
-            #
+            # Save non-visual noise patern, residual and denoised version of the image
             np.save(output + "noise" + ".npy", self.image)
             np.save(output + "residual" + ".npy", self.noise_residual)
             np.save(output + "denoised" + ".npy", self.denoised)
