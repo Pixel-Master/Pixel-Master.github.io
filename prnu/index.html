@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PRNU Analysis</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<!-- Loading Pyscript -->
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
 <script type="module" src="https://pyscript.net/releases/2025.8.1/core.js"></script>
 <style>
@@ -23,12 +24,12 @@
 <h1>PRNU Analysis</h1>
 <p id="status">Python is being loaded, please wait...</p>
 
-<label><input type="radio" name="mode" value="m1" checked>AI Detector (+ visible Noise Pattern)</label><br>
+<label><input type="radio" name="mode" value="m1" checked>AI Detector (and visible Noise Pattern)</label><br>
 <label><input type="radio" name="mode" value="m2">Camera Identification</label>
 
 <!-- Mode 1 -->
 <fieldset id="m1">
-  <legend>Mode 1: AI Detector (+ visible Noise Pattern)</legend>
+  <legend>Mode 1: AI Detector (and visible Noise Pattern)</legend>
   <input type="file" id="img1" accept="image/png,image/jpeg,image/tiff">
   <button id="go1" disabled>Analyze</button>
   <div id="out1"></div>
@@ -40,7 +41,7 @@
   <b>1. Reference images (of the same camera)</b><br>
   <input type="file" id="refs" accept="image/png,image/jpeg,image/tiff" multiple><br>
   <label><input type="checkbox" id="nozm"> Deactivate Zero-Meaning<details>  <summary>What is Zero-Meaning?</summary>
-      <p>Deactivate Zero-Meaning if you want to increase correlation between images taken with the same camera model but not the exact same camera.</p></details></label><br>
+      <p>Deactivate Zero-Meaning if you want to increase correlation between images taken with the same camera model. It also increases the correlation between different camera models and is generally not an accurate way to determine the camera model.</p></details></label><br>
   <span style="display: block; height: 4px;"></span>
   <span style="display: block; height: 8px;"></span>
   <button id="goref" disabled>Calculate Reference</button>
@@ -64,42 +65,19 @@
   <p></p>
 </details>
 
-<script>
-  // Show only the fieldset of the selected mode
-  document.querySelectorAll('input[name=mode]').forEach(r => r.addEventListener('change', () => {
-    const mode = document.querySelector('input[name=mode]:checked').value;
-    document.getElementById('m1').classList.toggle('hide', mode !== 'm1');
-    document.getElementById('m2').classList.toggle('hide', mode !== 'm2');
-  }));
-
-  // ONNX inference, called from Python.
-  // Input: float32 [1,1,512,512] noise. Output: raw P(AI) via softmax (class 0 = "ai").
-  // The threshold scaling is done afterwards in Python.
-  let session = null;
-  window.runModel = async function (data) {
-    // Load the model only once, on first use
-    if (!session) session = await ort.InferenceSession.create('prnu_ai_predictor.onnx');
-    const input = new ort.Tensor('float32', data, [1, 1, 512, 512]);
-    const result = await session.run({ [session.inputNames[0]]: input });
-    const logits = result[session.outputNames[0]].data;
-    // Subtracting the maximum keeps exp() numerically stable
-    const max = Math.max(logits[0], logits[1]);
-    const eAi = Math.exp(logits[0] - max), eReal = Math.exp(logits[1] - max);
-    return eAi / (eAi + eReal);
-  };
-</script>
-
 <script type="py" config='{"packages":["numpy","scipy","opencv-python"],"files":{"./prnu.py":"./prnu.py","./ai_predictor.py":"./ai_predictor.py"}}'>
-import sys, base64, asyncio, types
+# Asyncio is only necessary so the website doesn't freeze and is able to update the html when it's not idle
+import sys, base64, asyncio, copy
 from unittest.mock import MagicMock
 import numpy as np
 import cv2
+import scipy.signal  # must be imported before the mocks below, scipy inspects sys.modules for torch
 from pyscript import document, window, when
 from pyodide.ffi import to_js
 
-# ai_predictor imports PyTorch/sklearn, which don't exist in the browser. They are replaced by
-# placeholders so the import works; only Model.extract_prnu and Model._scale_probability are used
-# (both need neither torch nor sklearn).
+# The problem is that ai_predictor imports PyTorch/sklearn, which don't exist in the browser. They are replaced by
+# placeholders so the import and Model() work; only Model.extract_prnu, Model._scale_probability,
+# Model.label_map and Model.model_path are used (none of them need torch or sklearn).
 for name in ("torch", "torch.nn", "torch.optim", "torchvision", "torchvision.models", "sklearn", "sklearn.utils"):
     sys.modules[name] = MagicMock()
 import prnu
@@ -110,8 +88,10 @@ CORRELATION_THRESHOLD = 0.008
 # Threshold that balances false positives and false negatives of the AI model.
 # Raw probabilities are rescaled around it so that 0.5 marks the decision boundary.
 OPTIMAL_THRESHOLD = 0.97
-# Holds the reference (AverageNoise) between button clicks
-state = {"avg": None}
+# Because PyTorch doesn't work in the browser, the model has been converted to ONNX.
+model = ai_predictor.Model("prnu_ai_predictor.onnx")
+# Holds the reference (AverageNoise) and the loaded ONNX session between button clicks
+state = {"avg": None, "session": None}
 
 
 # ---------- Helpers ----------
@@ -125,6 +105,7 @@ def show(selector, html):
 
 
 def show_error(selector, message):
+    """Displays an error message."""
     show(selector, '<span class="err">' + message + '</span>')
 
 
@@ -137,10 +118,9 @@ async def show_busy(selector, message):
 async def save_upload(file, name):
     """Copy an uploaded browser file into Pyodide's virtual file system; returns its path.
     The prnu module reads images via cv2.imread, which needs a real path."""
-    data = bytes((await file.arrayBuffer()).to_py())
     path = "/tmp/" + name
     with open(path, "wb") as f:
-        f.write(data)
+        f.write(bytes((await file.arrayBuffer()).to_py()))
     return path
 
 
@@ -155,12 +135,36 @@ def extract(path, zero_mean_off=False, disable_crop=False):
 
 
 def noise_to_png_url(noise):
-    """Turn a noise array into a visible PNG data URL for an <img> tag."""
-    # shift_to_visual() modifies its image irreversibly, so use a throwaway extractor on a copy
-    visual = prnu.NoiseExtractor(image=noise.copy(), disable_crop=True)
+    """Turn a NoiseExtractor or AverageNoise into a visible PNG data URL for an <img> tag."""
+    # shift_to_visual() replaces its image irreversibly, so apply it to a shallow copy
+    visual = copy.copy(noise)
     visual.shift_to_visual()
     _, png = cv2.imencode(".png", visual.image)
     return "data:image/png;base64," + base64.b64encode(png.tobytes()).decode()
+
+
+async def run_model(noise):
+    """ONNX inference via onnxruntime-web (ort). Input: float32 [1,512,512] noise.
+    Returns the raw P(AI) via softmax; the threshold scaling is done afterwards."""
+    ort = window.ort
+    # Load the model only once, on first use
+    if state["session"] is None:
+        state["session"] = await ort.InferenceSession.create(model.model_path)
+    session = state["session"]
+    tensor = ort.Tensor.new("float32", to_js(np.ascontiguousarray(noise).ravel().data), to_js([1, 1, 512, 512]))
+    result = await session.run(to_js({session.inputNames[0]: tensor}, dict_converter=window.Object.fromEntries))
+    logits = np.asarray(getattr(result, session.outputNames[0]).data.to_py(), dtype=np.float64)
+    # Subtracting the maximum keeps exp() numerically stable
+    probs = np.exp(logits - logits.max())
+    return float((probs / probs.sum())[model.label_map["ai"]])
+
+
+# ---------- Mode switch: show only the fieldset of the selected mode ----------
+@when("change", "input[name=mode]")
+def switch_mode(event):
+    mode = q("input[name=mode]:checked").value
+    for m in ("m1", "m2"):
+        q("#" + m).classList.toggle("hide", mode != m)
 
 
 # ---------- Mode 1: AI detector ----------
@@ -178,23 +182,20 @@ async def analyse_single(event):
         return show_error("#out1", "File couldn't be loaded as image.")
     height, width = extractor.image.shape
     html = '<div>Noise pattern (' + str(width) + '×' + str(height) + '):</div>'
-    html += '<img src="' + noise_to_png_url(extractor.image) + '">'
+    html += '<img src="' + noise_to_png_url(extractor) + '">'
 
-    # AI input: reuse the model's own preprocessing (512x512 center crop, standardised noise).
-    # extract_prnu only reads self.target_shape, so a tiny stand-in object replaces a full Model.
-    stand_in = types.SimpleNamespace(target_shape=(512, 512))
-    noise = ai_predictor.Model.extract_prnu(stand_in, path)
+    # AI input: the model's own preprocessing (512x512 center crop, standardised noise)
+    noise = model.extract_prnu(path)
     if noise is None:
         html += '<div class="res err">AI evaluation not possible. Image has to be at least 512x512.</div>'
     else:
         try:
             # Raw probability from the ONNX model, then rescaled around the optimal threshold
-            raw = await window.runModel(to_js(np.ascontiguousarray(noise).ravel().data))
-            p = ai_predictor.Model._scale_probability(raw, OPTIMAL_THRESHOLD)
+            p = ai_predictor.Model._scale_probability(await run_model(noise), OPTIMAL_THRESHOLD)
             html += '<div class="res">AI-Probability: ' + format(p * 100, ".1f") + ' %'
             html += ' <span class="muted">(' + ("more likely AI generated" if p >= 0.5 else "more likely real") + ')</span></div>'
         except Exception as e:
-            html += '<div class="res err">Model couldn\'t be executed (does prnu_ai_predictor.onnx exist?): ' + str(e) + '</div>'
+            html += '<div class="res err">Model couldn\'t be executed (does ' + model.model_path + ' exist?): ' + str(e) + '</div>'
     show("#out1", html)
 
 
@@ -229,7 +230,7 @@ async def build_reference(event):
     html += ' (Zero-Meaning ' + ("deactivated" if zero_mean_off else "activated") + ')'
     if skipped:
         html += '<span class="muted">, ' + str(skipped) + ' skipped (no image or wrong size)</span>'
-    html += '</div><img src="' + noise_to_png_url(avg.image) + '">'
+    html += '</div><img src="' + noise_to_png_url(avg) + '">'
     show("#outref", html)
 
 
@@ -244,7 +245,7 @@ async def compare_test(event):
     if extractor is None:
         return show_error("#outtest", "File couldn't be loaded as image.")
     # Compare would silently return 0 on a size mismatch, so tell the user instead
-    if extractor.noise_residual.shape != state["avg"].image.shape:
+    if extractor.noise_residual.shape != state["avg"].dimensions:
         return show_error("#outtest", "Size of the reference images doesn't match that of the test image. Correlation would return zero.")
 
     score = float(prnu.Compare(extractor, state["avg"]).correlate())
